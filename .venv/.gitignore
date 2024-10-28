@@ -1,5 +1,6 @@
 # Ignorar tudo
 *
+/.venv/
 
 # Exceto a pastas específicas
 !.gitignore
