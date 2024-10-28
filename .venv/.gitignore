@@ -1,9 +1,0 @@
-# Ignorar tudo
-*
-/.venv/
-
-# Exceto a pastas específicas
-!.gitignore
-!/preco_teto/
-!/preco_teto/**
-/preco_teto/__pycache__
