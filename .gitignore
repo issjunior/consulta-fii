@@ -3,6 +3,7 @@
 
 # exeções
 !.gitignore
+!requirements.txt
 
 !/preco_teto/
 !/preco_teto/**
