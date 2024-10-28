@@ -1,5 +1,5 @@
 # dependencias para o funcionamento do código
-# para recriala em outro ambiente digite o camento
+# para recriar instalação automatica em outro ambiente digite o comando
 # pip install -r requirements.txt
 
 beautifulsoup4==4.12.3
