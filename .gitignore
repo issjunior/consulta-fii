@@ -1,0 +1,10 @@
+*
+
+!.gitignore
+
+!/preco_teto/
+!/preco_teto/**
+/preco_teto/__pycache__
+
+!/testes/
+!/testes/**
