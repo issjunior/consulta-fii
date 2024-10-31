@@ -1,3 +1,4 @@
+from constantes import *
 from datetime import datetime
 from babel.numbers import format_currency
 
@@ -8,8 +9,7 @@ AMARELO = '\033[93m'
 AZUL = '\033[94m'
 RESET = '\033[0m'
 
-# Constantes
-media_ntnb = 6.41
+# funções
 
 def exibir_cabecalho():
     print(f"{VERMELHO}{'#'*15} Cálculo de preço teto de FII {'#'*15}{RESET}")

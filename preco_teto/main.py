@@ -1,6 +1,7 @@
 from config import *
 from dividendos import *
 from calculos import *
+from constantes import *
 import yfinance as yf
 
 def main():
