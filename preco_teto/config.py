@@ -13,10 +13,13 @@ RESET = '\033[0m'
 
 def exibir_cabecalho():
     print(f"{VERMELHO}{'#'*15} Cálculo de preço teto de FII {'#'*15}{RESET}")
-    print(f"{AZUL}{'#'*15}{datetime.now().strftime(' %d/%m/%Y as %H:%M:%S ')}{'#'*15}{RESET}")
+    print(f"{AZUL}{'#'*15}{datetime.now().strftime(' %d/%m/%Y as %H:%M ')}{'#'*15}{RESET}")
     print(f"Média NTN-B: {AMARELO}{media_ntnb}%{RESET} (última edição no dia 25/10/2024)")
 
 # Função auxiliar para formatar valores monetários com a biblioteca babel
 def real(valor):
     return format_currency(valor, 'BRL', locale='pt_BR')
+
+def dollar(valor):
+    return format_currency(valor, 'USD', locale='en_US')
 
