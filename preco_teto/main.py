@@ -29,12 +29,12 @@ def main():
         # Exibição dos Resultados
         print(f"{VERMELHO}{'#'*15} Resultados do {ticker.replace('.SA', '')} {'#'*15}{RESET}")
         print(f"{acao.info['longName']}")
-        print(f"Cotação atual: {AMARELO}{moeda(preco_atual)}{RESET}")
-        print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{moeda(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
-        print(f"Total dividendos recebidos em 12 meses é {AMARELO}{moeda(total_dividendos)}{RESET}")
-        print(f"O preço teto seria de {VERMELHO}{moeda(preco_teto)}{RESET} com o spread de {AMARELO}{spread:.2f}%{RESET}")
+        print(f"Cotação atual: {AMARELO}{real(preco_atual)}{RESET}")
+        print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{real(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
+        print(f"Total dividendos recebidos em 12 meses é {AMARELO}{real(total_dividendos)}{RESET}")
+        print(f"O preço teto seria de {VERMELHO}{real(preco_teto)}{RESET} com o spread de {AMARELO}{spread:.2f}%{RESET}")
         print(f"O magic number do {AMARELO}{ticker.replace('.SA', '')}{RESET} é de {AMARELO}{cotas_necessarias}{RESET} cotas")
-        print(f"Seria necessário {AMARELO}{moeda(valor_cotas_magicnumber)}{RESET} para alcançar a quantidade de cotas do magic number")
+        print(f"Seria necessário {AMARELO}{real(valor_cotas_magicnumber)}{RESET} para alcançar a quantidade de cotas do magic number")
     
     except KeyError:
         print(f"{VERMELHO}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{RESET}")

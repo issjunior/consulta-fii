@@ -17,6 +17,6 @@ def exibir_cabecalho():
     print(f"Média NTN-B: {AMARELO}{media_ntnb}%{RESET} (última edição no dia 25/10/2024)")
 
 # Função auxiliar para formatar valores monetários com a biblioteca babel
-def moeda(valor):
+def real(valor):
     return format_currency(valor, 'BRL', locale='pt_BR')
 
