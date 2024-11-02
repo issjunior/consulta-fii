@@ -35,7 +35,7 @@ def main():
         print(f"{acao.info['longName']}")
         print(f"Cotação atual: {AMARELO}{real(preco_atual)}{RESET}")
         print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{real(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
-        print(f"Total dividendos recebidos em 12 meses é {AMARELO}{real(total_dividendos)}{RESET}")
+        print(f"Total dividendos recebidos nos últimos 12 meses é {AMARELO}{real(total_dividendos)}{RESET}")
         print(f"O preço teto seria de {VERMELHO}{real(preco_teto)}{RESET} com o spread de {AMARELO}{spread:.2f}%{RESET}")
         print(f"O magic number do {AMARELO}{ticker.replace('.SA', '')}{RESET} é de {AMARELO}{cotas_necessarias}{RESET} cotas")
         print(f"Seria necessário {AMARELO}{real(valor_cotas_magicnumber)}{RESET} para alcançar a quantidade de cotas do magic number")
