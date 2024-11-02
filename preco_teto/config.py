@@ -1,4 +1,3 @@
-from constantes import *
 from datetime import datetime
 from babel.numbers import format_currency
 
@@ -10,11 +9,9 @@ AZUL = '\033[94m'
 RESET = '\033[0m'
 
 # funções
-
 def exibir_cabecalho():
     print(f"{VERMELHO}{'#'*15} Cálculo de preço teto de FII {'#'*15}{RESET}")
-    print(f"{AZUL}{'#'*15}{datetime.now().strftime(' %d/%m/%Y as %H:%M ')}{'#'*15}{RESET}")
-    print(f"Média NTN-B: {AMARELO}{media_ntnb}%{RESET} (última edição no dia 25/10/2024)")
+ #  print(f"{AZUL}{'#'*15}{datetime.now().strftime(' %d/%m/%Y as %Hh:%Mm ')}{'#'*15}{RESET}")
 
 # Função auxiliar para formatar valores monetários com a biblioteca babel
 def real(valor):

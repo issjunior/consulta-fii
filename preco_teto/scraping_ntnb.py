@@ -1,7 +1,11 @@
+from config import *
 import requests
 from bs4 import BeautifulSoup
 import re
 import statistics
+
+url = "https://investidor10.com.br/tesouro-direto/"
+
 
 def scrape_tesouro_ipca():
     """
@@ -9,8 +13,7 @@ def scrape_tesouro_ipca():
     Returns:
         list: Lista com tuplas (título, porcentagem) dos títulos IPCA+
     """
-    url = "https://investidor10.com.br/tesouro-direto/"
-    
+
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
@@ -57,20 +60,27 @@ def calcular_media_taxas(titulos_info):
     
     return statistics.mean(taxas) if taxas else 0
 
+media_ntnb = 0  # Declaração global para passagem de valor para a variavel "media_ntnb_local" no main.py 
+
 def exibir_resultados():
     titulos_info = scrape_tesouro_ipca()
+    
     if titulos_info:
-        print("Títulos IPCA+ encontrados:")
-        for titulo, porcentagem in titulos_info:
-            print(f"Título: {titulo} - Taxa: {porcentagem}%")
+        print(f"{VERMELHO}{'#'*15} Buscando titulos IPCA+ {'#'*15}{RESET}")
+        print(f"Títulos encontrados em {AZUL}{url}{RESET}")
         
-        # Calcula e exibe a média
-        media = calcular_media_taxas(titulos_info)
-        print("\n" + "="*40)
-        print(f"Média das taxas: {media:.2f}%")
+        for titulo, porcentagem in titulos_info:
+            print(f"{titulo} - Rentabilidade anual: IPCA + {porcentagem}%")
+        
+        # Calcula e define a média
+        media_ntnb = calcular_media_taxas(titulos_info)
+        print("="*40)
+        print(f"Média das taxas: {AMARELO}{media_ntnb:.2f}%{RESET}")
         print("="*40)
     else:
         print("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
+    
+    return media_ntnb # Retorna o valor de media_ntnb para uso no main.py com a variavel "media_ntnb_local"
 
 if __name__ == "__main__":
     exibir_resultados()
