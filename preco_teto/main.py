@@ -6,7 +6,6 @@ import yfinance as yf
 
 def main():
     media_ntnb_local = exibir_resultados()  # Recebe o valor atualizado da variavel "media_ntnb" do scraping_ntnb.py
-    #exibir_resultados()
     exibir_cabecalho()
     
     ticker = input("Qual o ticker: ").upper() + ".SA"
