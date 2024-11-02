@@ -25,14 +25,13 @@ def main():
         acao = yf.Ticker(ticker)
         preco_atual = acao.info.get("currentPrice", None)
         media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
-#       preco_teto = calcular_preco_teto(total_dividendos, media_ntnb, spread)
         preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
         print(f"valor do total dividendos:{total_dividendos}, media NTNB:{media_ntnb_local:.2f} e spread:{spread}") # printar variaveis
         cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
         
         # Exibição dos Resultados
-        print(f"{VERMELHO}{'#'*15} Resultados do {ticker.replace('.SA', '')} {'#'*15}{RESET}")
+        print(f"{VERMELHO}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{RESET}")
         print(f"{acao.info['longName']}")
         print(f"Cotação atual: {AMARELO}{real(preco_atual)}{RESET}")
         print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{real(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
