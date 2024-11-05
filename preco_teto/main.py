@@ -25,7 +25,6 @@ def main():
         preco_atual = acao.info.get("currentPrice", None)
         media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
         preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
-        print(f"valor do total dividendos:{total_dividendos}, media NTNB:{media_ntnb_local:.2f} e spread:{spread}") # printar variaveis
         cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
         
@@ -33,6 +32,7 @@ def main():
         print(f"{VERMELHO}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{RESET}")
         print(f"{acao.info['longName']}")
         print(f"Cotação atual: {AMARELO}{real(preco_atual)}{RESET}")
+        print(f"Variação da cota em 1 ano {AMARELO}{real(acao.info['fiftyTwoWeekLow'])}{RESET} <-> {AMARELO}{real(acao.info['fiftyTwoWeekHigh'])}{RESET}")
         print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{real(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
         print(f"Total dividendos recebidos nos últimos 12 meses é {AMARELO}{real(total_dividendos)}{RESET}")
         print(f"O preço teto seria de {VERMELHO}{real(preco_teto)}{RESET} com o spread de {AMARELO}{spread:.2f}%{RESET}")
