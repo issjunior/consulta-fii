@@ -2,7 +2,12 @@ from config import *
 from scraping_ntnb import exibir_resultados, media_ntnb
 from dividendos import *
 from calculos import *
+from colorama import Fore, Style
+import colorama
 import yfinance as yf
+
+# Inicializa o colorama para suportar de cores
+colorama.init()
 
 def main():
     media_ntnb_local = exibir_resultados()  # Recebe o valor atualizado da variavel "media_ntnb" do scraping_ntnb.py
@@ -14,7 +19,7 @@ def main():
         media_dividendos = obter_media_dividendos(ticker)
         
         if media_dividendos is None:
-            print(f"Código {AMARELO}{ticker}{RESET} não encontrado.")
+            print(f"Código {Fore.YELLOW}{ticker}{Style.RESET_ALL} não encontrado.")
             return
         
         spread = float(input("Qual o spread (risco) do FII: ").replace(",", "."))
@@ -30,17 +35,17 @@ def main():
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
         
         # Exibição dos Resultados
-        print(f"{VERMELHO}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{RESET}")
+        print(f"{Fore.YELLOW}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
         print(f"{acao.info['longName']}")
-        print(f"Cotação atual: {AMARELO}{real(preco_atual)}{RESET}")
-        print(f"A média dos dividendos nos últimos 12 meses é de {AMARELO}{real(media_dividendos)}{RESET} equivalente a {AMARELO}{media_dividendos_porcentagem:.2f}%{RESET} nos últimos 12 meses")
-        print(f"Total dividendos recebidos nos últimos 12 meses é {AMARELO}{real(total_dividendos)}{RESET}")
-        print(f"O preço teto seria de {VERMELHO}{real(preco_teto)}{RESET} com o spread de {AMARELO}{spread:.2f}%{RESET}")
-        print(f"O magic number do {AMARELO}{ticker.replace('.SA', '')}{RESET} é de {AMARELO}{cotas_necessarias}{RESET} cotas")
-        print(f"Seria necessário {AMARELO}{real(valor_cotas_magicnumber)}{RESET} para alcançar a quantidade de cotas do magic number")
+        print(f"Cotação atual: {Fore.YELLOW}{real(preco_atual)}{Style.RESET_ALL}")
+        print(f"A média dos dividendos nos últimos 12 meses é de {Fore.YELLOW}{real(media_dividendos)}{Style.RESET_ALL} equivalente a {Fore.YELLOW}{media_dividendos_porcentagem:.2f}%{Style.RESET_ALL} nos últimos 12 meses")
+        print(f"Total dividendos recebidos nos últimos 12 meses é {Fore.YELLOW}{real(total_dividendos)}{Style.RESET_ALL}")
+        print(f"O preço teto seria de {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
+        print(f"O magic number do {Fore.YELLOW}{ticker.replace('.SA', '')}{Style.RESET_ALL} é de {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
+        print(f"Seria necessário {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} para alcançar a quantidade de cotas do magic number")
     
     except KeyError:
-        print(f"{VERMELHO}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{RESET}")
+        print(f"{Fore.CYAN}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()

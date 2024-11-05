@@ -3,6 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import statistics
+import colorama
+from colorama import Fore, Style
 
 url = "https://investidor10.com.br/tesouro-direto/"
 
@@ -66,8 +68,8 @@ def exibir_resultados():
     titulos_info = scrape_tesouro_ipca()
     
     if titulos_info:
-        print(f"{VERMELHO}{'#'*15} Buscando titulos IPCA+ {'#'*15}{RESET}")
-        print(f"Títulos encontrados em {AZUL}{url}{RESET}")
+        print(f"{Fore.LIGHTRED_EX}{'#'*15} Buscando titulos IPCA+ {'#'*15}{Style.RESET_ALL}")
+        print(f"Títulos encontrados em {Fore.CYAN}{url}{Style.RESET_ALL}")
         
         for titulo, porcentagem in titulos_info:
             print(f"{titulo} - Rentabilidade anual: IPCA + {porcentagem}%")
@@ -75,7 +77,7 @@ def exibir_resultados():
         # Calcula e define a média
         media_ntnb = calcular_media_taxas(titulos_info)
         print("="*40)
-        print(f"Média das taxas: {AMARELO}{media_ntnb:.2f}%{RESET}")
+        print(f"Média das taxas: {Fore.YELLOW}{media_ntnb:.2f}%{Style.RESET_ALL}")
         print("="*40)
     else:
         print("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
