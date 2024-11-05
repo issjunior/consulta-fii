@@ -34,9 +34,10 @@ def main():
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
         
         # Exibição dos Resultados
-        print(f"{Fore.YELLOW}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
+        print(f"{Fore.LIGHTRED_EX}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
         print(f"{acao.info['longName']}")
         print(f"Cotação atual: {Fore.YELLOW}{real(preco_atual)}{Style.RESET_ALL}")
+        print(f"Variação da cota em 1 ano {Fore.YELLOW}{real(acao.info['fiftyTwoWeekLow'])}{Style.RESET_ALL} <-> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekHigh'])}{Style.RESET_ALL}")
         print(f"A média dos dividendos nos últimos 12 meses é de {Fore.YELLOW}{real(media_dividendos)}{Style.RESET_ALL} equivalente a {Fore.YELLOW}{media_dividendos_porcentagem:.2f}%{Style.RESET_ALL} nos últimos 12 meses")
         print(f"Total dividendos recebidos nos últimos 12 meses é {Fore.YELLOW}{real(total_dividendos)}{Style.RESET_ALL}")
         print(f"O preço teto seria de {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")

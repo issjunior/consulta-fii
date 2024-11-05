@@ -5,7 +5,7 @@ from colorama import Fore, Style
 
 # funções
 def exibir_cabecalho():
-    print(f"{Fore.CYAN}{'#'*12} Cálculo de preço teto de FII {'#'*12}{Style.RESET_ALL}")
+    print(f"{Fore.LIGHTRED_EX}{'#'*12} Cálculo de preço teto de FII {'#'*12}{Style.RESET_ALL}")
 
 # Função auxiliar para formatar valores monetários com a biblioteca babel
 def real(valor):

@@ -69,7 +69,7 @@ def exibir_resultados():
     
     if titulos_info:
         print(f"{Fore.LIGHTRED_EX}{'#'*15} Buscando titulos IPCA+ {'#'*15}{Style.RESET_ALL}")
-        print(f"Títulos encontrados em {Fore.CYAN}{url}{Style.RESET_ALL}")
+        print(f"Títulos encontrados em {Fore.BLUE}{url}{Style.RESET_ALL}")
         
         for titulo, porcentagem in titulos_info:
             print(f"{titulo} - Rentabilidade anual: IPCA + {porcentagem}%")
