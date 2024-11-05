@@ -30,7 +30,6 @@ def main():
         preco_atual = acao.info.get("currentPrice", None)
         media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
         preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
-        print(f"valor do total dividendos:{total_dividendos}, media NTNB:{media_ntnb_local:.2f} e spread:{spread}") # printar variaveis
         cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
         
