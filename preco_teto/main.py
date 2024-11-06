@@ -36,14 +36,15 @@ def main():
         # Exibição dos Resultados
         print(f"{Fore.LIGHTRED_EX}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
         print(f"{acao.info['longName']}")
-        print(f"Cotação atual: {Fore.YELLOW}{real(preco_atual)}{Style.RESET_ALL}")
-        print(f"Variação da cota em 1 ano {Fore.YELLOW}{real(acao.info['fiftyTwoWeekLow'])}{Style.RESET_ALL} <-> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekHigh'])}{Style.RESET_ALL}")
-        print(f"A média dos dividendos nos últimos 12 meses é de {Fore.YELLOW}{real(media_dividendos)}{Style.RESET_ALL} equivalente a {Fore.YELLOW}{media_dividendos_porcentagem:.2f}%{Style.RESET_ALL} nos últimos 12 meses")
-        print(f"Total dividendos recebidos nos últimos 12 meses é {Fore.YELLOW}{real(total_dividendos)}{Style.RESET_ALL}")
-        print(f"O preço teto seria de {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
-        print(f"O magic number do {Fore.YELLOW}{ticker.replace('.SA', '')}{Style.RESET_ALL} é de {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
-        print(f"Seria necessário {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} para alcançar a quantidade de cotas do magic number")
-    
+        print(f"Cotação atual        -> {Fore.YELLOW}{real(preco_atual)}{Style.RESET_ALL}")
+        print(f"Variação da cota     -> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekLow'])}{Style.RESET_ALL} <-> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekHigh'])}{Style.RESET_ALL}")
+        print(f"Média dividendos     -> {Fore.YELLOW}{real(media_dividendos)}{Style.RESET_ALL} equivalente a {Fore.YELLOW}{media_dividendos_porcentagem:.2f}%{Style.RESET_ALL} nos últimos 12 meses")
+        print(f"Dividendos recebidos -> {Fore.YELLOW}{real(total_dividendos)}{Style.RESET_ALL}")
+        print(f"Preço teto           -> {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
+        print(f"O magic number       -> {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
+        print(f"Cotas necessárias    -> {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} cotas")
+        print(f"Cap rate             ->")
+
     except KeyError:
         print(f"{Fore.CYAN}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{Style.RESET_ALL}")
 
