@@ -14,3 +14,6 @@ def calcular_cotas_necessarias(preco_atual, media_dividendos): # calculo para do
 
 def calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual):
         return (cotas_necessarias * preco_atual)
+
+def calcular_cap_rate(media_dividendos, preco_atual):
+    return (media_dividendos / preco_atual) * 100
