@@ -6,6 +6,7 @@ babel==2.16.0
 beautifulsoup4==4.12.3
 certifi==2024.8.30
 charset-normalizer==3.4.0
+colorama==0.4.6
 frozendict==2.4.6
 html5lib==1.1
 idna==3.10
