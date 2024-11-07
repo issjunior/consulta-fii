@@ -32,6 +32,7 @@ def main():
         preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
         cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
         valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
+        valor_cap_rate = calcular_cap_rate(media_dividendos, preco_atual)
         
         # Exibição dos Resultados
         print(f"{Fore.LIGHTRED_EX}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
@@ -43,7 +44,8 @@ def main():
         print(f"Preço teto           -> {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
         print(f"O magic number       -> {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
         print(f"Cotas necessárias    -> {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} cotas")
-        print(f"Cap rate             ->")
+        print(f"Valor do dividendo: {media_dividendos} e valor do preco atual {preco_atual}")
+        print(f"Cap rate             -> {Fore.YELLOW}{valor_cap_rate:.2f}%{Style.RESET_ALL}")
 
     except KeyError:
         print(f"{Fore.CYAN}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{Style.RESET_ALL}")
