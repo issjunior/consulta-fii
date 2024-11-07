@@ -44,7 +44,6 @@ def main():
         print(f"Preço teto           -> {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
         print(f"O magic number       -> {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
         print(f"Cotas necessárias    -> {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} cotas")
-        print(f"Valor do dividendo: {media_dividendos} e valor do preco atual {preco_atual}")
         print(f"Cap rate             -> {Fore.YELLOW}{valor_cap_rate:.2f}%{Style.RESET_ALL}")
 
     except KeyError:
