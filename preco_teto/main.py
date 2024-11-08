@@ -3,51 +3,87 @@ from scraping_ntnb import *
 from dividendos import *
 from calculos import *
 from colorama import Fore, Style
-import colorama
 import yfinance as yf
+import streamlit as st
+import pandas as pd
 
-colorama.init() # Inicializa o colorama para suportar de cores
+# Definindo o layout para wide mode
+st.set_page_config(layout="wide")
+
+with st.sidebar:
+    st.title("Consulta FII")
+    st.markdown("Preço teto de acordo com o modelo de Gordon")
+    st.image("preco_teto/img/formula-modelo-de-gordon.jpg", use_container_width=True)
+  
+    # Explicando os termos da fórmula de forma clara
+    st.markdown("""
+    Onde:
+    - **P0**: Preço atual do ativo.
+    - **D1**: Dividend Yield nos próximos 12 meses.
+    - **k**: IPCA atual.
+    - **g**: Taxa de crescimento dos dividendos.
+    """)
+    
+    # Exibe os títulos encontrados e suas porcentagens
+    media_ntnb_local, titulos_info = exibir_resultados()
+    if titulos_info:
+        st.markdown("### Títulos IPCA+ Encontrados")
+        st.markdown(f"{url}")
+        for titulo, porcentagem in titulos_info:
+            st.write(f"{titulo} - IPCA + {porcentagem}%")
+    else:
+        st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
+
+    # Exibição do resultado da função exibir_resultados() na barra lateral (media NTNB)
+    st.markdown(f"**Média NTNB Atual:** {media_ntnb_local:.2f}%")
 
 def main():
-    media_ntnb_local = exibir_resultados()  # Recebe o valor atualizado da variavel "media_ntnb" do scraping_ntnb.py
-    exibir_cabecalho()
-    
-    ticker = input("Qual o ticker: ").upper() + ".SA"
-    
-    try:
-        media_dividendos = obter_media_dividendos(ticker)
-        
-        if media_dividendos is None:
-            print(f"Código {Fore.YELLOW}{ticker}{Style.RESET_ALL} não encontrado.")
-            return
-        
-        spread = float(input("Qual o spread (risco) do FII: ").replace(",", "."))
-        vacancia = (input("Qual a vacância: ").replace(',', '.'))
-        
-        total_dividendos = calcular_total_dividendos(media_dividendos)
-        acao = yf.Ticker(ticker)
-        preco_atual = acao.info.get("currentPrice", None)
-        media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
-        preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
-        cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
-        valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
-        valor_cap_rate = calcular_cap_rate_ajustado(media_dividendos, vacancia, preco_atual)
-        
-        # Exibição dos Resultados
-        print(f"{Fore.LIGHTRED_EX}{'#'*16} Resultados do {ticker.replace('.SA', '')} {'#'*16}{Style.RESET_ALL}")
-        print(f"{acao.info['longName']}")
-        print(f"Cotação atual        -> {Fore.YELLOW}{real(preco_atual)}{Style.RESET_ALL}")
-        print(f"Variação da cota     -> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekLow'])}{Style.RESET_ALL} <-> {Fore.YELLOW}{real(acao.info['fiftyTwoWeekHigh'])}{Style.RESET_ALL}")
-        print(f"Média dividendos     -> {Fore.YELLOW}{real(media_dividendos)}{Style.RESET_ALL} equivalente a {Fore.YELLOW}{media_dividendos_porcentagem:.2f}%{Style.RESET_ALL} nos últimos 12 meses")
-        print(f"Dividendos recebidos -> {Fore.YELLOW}{real(total_dividendos)}{Style.RESET_ALL}")
-        print(f"Preço teto           -> {Fore.LIGHTRED_EX}{real(preco_teto)}{Style.RESET_ALL} com o spread de {Fore.YELLOW}{spread:.2f}%{Style.RESET_ALL}")
-        print(f"O magic number       -> {Fore.YELLOW}{cotas_necessarias}{Style.RESET_ALL} cotas")
-        print(f"Cotas necessárias    -> {Fore.YELLOW}{real(valor_cotas_magicnumber)}{Style.RESET_ALL} cotas")
-        print(f"Cap rate ajustado    -> {Fore.YELLOW}{valor_cap_rate:.2f}%{Style.RESET_ALL}")
-#       print(f"Media: {media_dividendos*12}, vacancia: {vacancia} e preço atual: {preco_atual}")  # teste de variaveis
+    st.header("Consulta de Indicadores de FIIs")
+    ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
+    spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, step=0.5, format="%.2f")
+    vacancia = st.number_input("Qual a vacância (%):", value=0.0, step=0.01, format="%.2f")
 
-    except KeyError:
-        print(f"{Fore.CYAN}Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.{Style.RESET_ALL}")
+    if st.button("Consultar"):
+        if ticker:
+            try:
+                media_dividendos = obter_media_dividendos(ticker)
+                if media_dividendos is None:
+                    st.warning(f"Código {ticker} não encontrado.")
+                    return
+                total_dividendos = calcular_total_dividendos(media_dividendos)
+                acao = yf.Ticker(ticker)
+                preco_atual = acao.info.get("currentPrice", None)
+                media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
+                preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
+                cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
+                valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
+                valor_cap_rate = calcular_cap_rate_ajustado(media_dividendos, vacancia, preco_atual)
+
+                resultados = {
+                    "Indicador": [
+                        "Fundo", "Ticker", "Cotação Atual", "Variação da Cota", "Média de Dividendos",
+                        "Dividendos Recebidos", "Preço Teto", "Magic Number", "Valor para Magic Number", "Cap Rate Ajustado (considerando vacância)"
+                    ],
+                    "Valor": [
+                        acao.info.get('longName', 'N/A'), ticker.replace(".SA", ""), real(preco_atual),
+                        f"R$ {acao.info.get('fiftyTwoWeekLow', 'N/A')} - R$ {acao.info.get('fiftyTwoWeekHigh', 'N/A')}",
+                        f"{real(media_dividendos)} ({media_dividendos_porcentagem:.2f}%)", real(total_dividendos),
+                        f"{real(preco_teto)} (com spread de {spread:.2f}%)", f"{cotas_necessarias} cotas",
+                        real(valor_cotas_magicnumber), f"{valor_cap_rate:.2f}%"
+                    ]
+                }
+                df_resultados = pd.DataFrame(resultados)
+
+                def colorir_linhas(row):
+                    return ['background-color: #f0f0f0' if row.name % 2 == 0 else 'background-color: white'] * len(row)
+
+                st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
+                st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), use_container_width=True)
+
+            except KeyError:
+                st.error(f"Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.")
+        else:
+            st.warning("Por favor, insira um ticker válido.")
 
 if __name__ == "__main__":
     main()
