@@ -2,7 +2,6 @@ from config import *
 from scraping_ntnb import *
 from dividendos import *
 from calculos import *
-from colorama import Fore, Style
 import yfinance as yf
 import streamlit as st
 import pandas as pd
