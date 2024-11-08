@@ -29,14 +29,14 @@ with st.sidebar:
     media_ntnb_local, titulos_info = exibir_resultados()
     if titulos_info:
         st.markdown("### Títulos IPCA+ Encontrados")
-        st.markdown(f"Busca automática no: {url}")
+        st.markdown(f"Busca automática na URL: {url}")
         for titulo, porcentagem in titulos_info:
             st.write(f"{titulo} - IPCA + {porcentagem}%")
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
     # Exibição do resultado da função exibir_resultados() na barra lateral (media NTNB)
-    st.markdown(f"**Média NTNB Atual:** {media_ntnb_local:.2f}%")
+    st.markdown(f"**Média NTN-B:** {media_ntnb_local:.2f}%")
 
 def main():
     st.header("Consulta de Indicadores de FIIs")
