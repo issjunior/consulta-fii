@@ -28,7 +28,7 @@ with st.sidebar:
     # Exibe os títulos encontrados e suas porcentagens
     media_ntnb_local, titulos_info = exibir_resultados()
     if titulos_info:
-        st.markdown("### Títulos IPCA+ Encontrados")
+        st.markdown("### Títulos IPCA+ encontrados")
         st.markdown(f"Busca automática na URL: {url}")
         for titulo, porcentagem in titulos_info:
             st.write(f"{titulo} - IPCA + {porcentagem}%")
