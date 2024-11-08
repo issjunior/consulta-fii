@@ -11,7 +11,9 @@ st.set_page_config(layout="wide")
 
 with st.sidebar:
     st.title("Consulta FII")
+  
     st.markdown("Preço teto de acordo com o modelo de Gordon")
+  
     st.image("preco_teto/img/formula-modelo-de-gordon.jpg", use_container_width=True)
   
     # Explicando os termos da fórmula de forma clara
@@ -27,7 +29,7 @@ with st.sidebar:
     media_ntnb_local, titulos_info = exibir_resultados()
     if titulos_info:
         st.markdown("### Títulos IPCA+ Encontrados")
-        st.markdown(f"{url}")
+        st.markdown(f"Busca automática no: {url}")
         for titulo, porcentagem in titulos_info:
             st.write(f"{titulo} - IPCA + {porcentagem}%")
     else:
