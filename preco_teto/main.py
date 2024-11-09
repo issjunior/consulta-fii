@@ -1,5 +1,6 @@
 from config import *
 from scraping_ntnb import *
+from scraping_ipca import *
 from dividendos import *
 from calculos import *
 import yfinance as yf
@@ -33,6 +34,7 @@ with st.sidebar:
 
     # Exibição do resultado da função exibir_resultados() na barra lateral (media NTNB)
     st.markdown(f"**Média NTN-B:** {media_ntnb_local:.2f}%")
+    st.markdown(f"**IPCA:** {ipca_elements[1].text.strip()}")
 
 def main():
     st.header("Cálculo de preço teto para FIIs de tijolos")
