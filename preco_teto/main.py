@@ -17,7 +17,7 @@ with st.sidebar:
     - **$D_{1}$**: Consideramos os 12 últimos.
     - **r**: Média NTN-B + spread.
     - **g**: Taxa de crescimento dos dividendos.
-    """, unsafe_allow_html=True)
+    """)
 
     st.divider()
 
