@@ -3,8 +3,8 @@ import math
 def calcular_total_dividendos(media_dividendos):                            # media dividendos nos ultimos 12 meses
     return media_dividendos * 12
 
-def calcular_preco_teto(total_dividendos, media_ntnb, spread):
-    return total_dividendos / (media_ntnb + spread) * 100
+def calcular_preco_teto(total_dividendos, media_ntnb, spread, tx_crescimento_dy):
+    return (total_dividendos / ((media_ntnb + spread)/100) - tx_crescimento_dy)
 
 def calcular_media_dividendos_porcentagem(total_dividendos, preco_atual):
     return (total_dividendos / preco_atual) * 100

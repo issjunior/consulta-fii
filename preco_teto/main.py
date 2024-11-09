@@ -20,8 +20,8 @@ with st.sidebar:
     st.markdown("""
     Onde:
     - **P0**: Preço atual do ativo.
-    - **D1**: Dividend Yield nos próximos 12 meses.
-    - **k**: IPCA atual.
+    - **D1**: DY nos próximos 12 meses.
+    - **k**: Taxa de desconto.
     - **g**: Taxa de crescimento dos dividendos.
     """)
     
@@ -43,6 +43,7 @@ def main():
     ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
     spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, step=0.5, format="%.2f")
     vacancia = st.number_input("Qual a vacância (%):", value=0.0, step=0.01, format="%.2f")
+    tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os proximos 12 meses (%):", value=0.0, step=0.01, format="%.2f")
 
     if st.button("Consultar"):
         if ticker:
@@ -55,22 +56,35 @@ def main():
                 acao = yf.Ticker(ticker)
                 preco_atual = acao.info.get("currentPrice", None)
                 media_dividendos_porcentagem = calcular_media_dividendos_porcentagem(total_dividendos, preco_atual)
-                preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread)
+                preco_teto = calcular_preco_teto(total_dividendos, media_ntnb_local, spread, tx_crescimento_dy)
                 cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
                 valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
                 valor_cap_rate = calcular_cap_rate_ajustado(media_dividendos, vacancia, preco_atual)
 
                 resultados = {
                     "Indicador": [
-                        "Fundo", "Ticker", "Cotação Atual", "Variação da Cota", "Média de Dividendos",
-                        "Dividendos Recebidos", "Preço Teto", "Magic Number", "Valor para Magic Number", "Cap Rate Ajustado (considerando vacância)"
+                        "Fundo",
+                        "Ticker",
+                        "Cotação Atual",
+                        "Variação da Cota",
+                        "Média de Dividendos",
+                        "Dividendos Recebidos",
+                        "Preço Teto",
+                        "Magic Number",
+                        "Valor para Magic Number",
+                        "Cap Rate Ajustado (considerando vacância)"
                     ],
                     "Valor": [
-                        acao.info.get('longName', 'N/A'), ticker.replace(".SA", ""), real(preco_atual),
+                        acao.info.get('longName', 'N/A'),
+                        ticker.replace(".SA", ""),
+                        real(preco_atual),
                         f"R$ {acao.info.get('fiftyTwoWeekLow', 'N/A')} - R$ {acao.info.get('fiftyTwoWeekHigh', 'N/A')}",
-                        f"{real(media_dividendos)} ({media_dividendos_porcentagem:.2f}%)", real(total_dividendos),
-                        f"{real(preco_teto)} (com spread de {spread:.2f}%)", f"{cotas_necessarias} cotas",
-                        real(valor_cotas_magicnumber), f"{valor_cap_rate:.2f}%"
+                        f"{real(media_dividendos)} (DY anual de {media_dividendos_porcentagem:.2f}%)",
+                        real(total_dividendos),
+                        f"{real(preco_teto)} (com spread de {spread:.2f}%)",
+                        f"{cotas_necessarias} cotas",
+                        real(valor_cotas_magicnumber),
+                        f"{valor_cap_rate:.2f}%"
                     ]
                 }
                 df_resultados = pd.DataFrame(resultados)
@@ -80,11 +94,11 @@ def main():
 
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
                 st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), use_container_width=True)
+#               st.markdown(f"Total dividendos: {total_dividendos}, media NTNB: {media_ntnb_local}, spread: {spread} e tx de cescimento: {tx_crescimento_dy}")
 
             except KeyError:
                 st.error(f"Erro: Não foi possível encontrar dados para o ticker '{ticker}'. Verifique se o ticker está correto.")
         else:
             st.warning("Por favor, insira um ticker válido.")
-
 if __name__ == "__main__":
     main()
