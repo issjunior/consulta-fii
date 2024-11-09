@@ -19,16 +19,18 @@ with st.sidebar:
     # Explicando os termos da fórmula de forma clara
     st.markdown("""
     Onde:
-    - **D**: DY nos próximos 12 meses. Considramos os 12 últimos.
+    - **D**: DY nos próximos 12 meses (consideramos os 12 últimos).
     - **k**: Taxa de desconto (média NTN-B + spread).
     - **g**: Taxa de crescimento dos dividendos.
     """)
-    
+
+    st.divider()
+
     # Exibe os títulos encontrados e suas porcentagens
     media_ntnb_local, titulos_info = exibir_resultados()
     if titulos_info:
         st.markdown("### Títulos IPCA+ encontrados")
-        st.markdown(f"Busca automática na URL: {url}")
+        st.markdown(f"Busca automática no site do [Investidor10]({url})")
         for titulo, porcentagem in titulos_info:
             st.write(f"{titulo} - IPCA + {porcentagem}%")
     else:
