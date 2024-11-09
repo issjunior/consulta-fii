@@ -12,16 +12,15 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     st.title("Consulta FII")
   
-    st.markdown("Preço teto de acordo com o modelo de Gordon")
+    st.markdown("Preço teto de acordo com o **modelo de Gordon**")
   
-    st.image("preco_teto/img/formula-modelo-de-gordon.jpg", use_container_width=True)
-  
+    st.latex(r"\text{Preço máximo} = \frac{D}{k - g}")
+    
     # Explicando os termos da fórmula de forma clara
     st.markdown("""
     Onde:
-    - **P0**: Preço atual do ativo.
-    - **D1**: DY nos próximos 12 meses.
-    - **k**: Taxa de desconto.
+    - **D**: DY nos próximos 12 meses. Considramos os 12 últimos.
+    - **k**: Taxa de desconto (média NTN-B + spread).
     - **g**: Taxa de crescimento dos dividendos.
     """)
     
