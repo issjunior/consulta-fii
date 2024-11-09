@@ -35,7 +35,7 @@ with st.sidebar:
     st.markdown(f"**Média NTN-B:** {media_ntnb_local:.2f}%")
 
 def main():
-    st.header("Consulta de Indicadores de FIIs")
+    st.header("Cálculo de preço teto para FIIs de tijolos")
     ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
     spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, step=0.5, format="%.2f")
     vacancia = st.number_input("Qual a vacância (%):", value=0.0, step=0.01, format="%.2f")
