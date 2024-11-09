@@ -10,19 +10,14 @@ import pandas as pd
 st.set_page_config(layout="wide")
 
 with st.sidebar:
-    st.title("Consulta FII")
-  
-    st.markdown("Preço teto de acordo com o **modelo de Gordon**")
-  
-    st.latex(r"\text{Preço máximo} = \frac{D}{k - g}")
-    
-    # Explicando os termos da fórmula de forma clara
+    # Explicando os termos do modelo de gordon
+    st.image("preco_teto/img/modelo_gordon.png", use_container_width=True)
     st.markdown("""
     Onde:
-    - **D**: DY nos próximos 12 meses (consideramos os 12 últimos).
-    - **k**: Taxa de desconto (média NTN-B + spread).
+    - **$D_{1}$**: Consideramos os 12 últimos.
+    - **r**: Média NTN-B + spread.
     - **g**: Taxa de crescimento dos dividendos.
-    """)
+    """, unsafe_allow_html=True)
 
     st.divider()
 
