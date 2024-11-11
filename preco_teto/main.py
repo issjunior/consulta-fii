@@ -13,6 +13,7 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     # Explicando os termos do modelo de gordon
     st.image("preco_teto/img/modelo_gordon.png", use_container_width=True)
+    
     st.markdown("""
     Onde:
     - **$D_{1}$**: Consideramos os 12 últimos.
@@ -22,22 +23,34 @@ with st.sidebar:
 
     st.divider()
 
+    # classe para reduzir o espaçamento no st.markdown
+    st.markdown(
+        """
+        <style>
+        .reduced-space { margin-bottom: -10px; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     # Exibe os títulos encontrados e suas porcentagens
     media_ntnb_local, titulos_info = exibir_resultados()
     if titulos_info:
         st.markdown("### Títulos IPCA+ encontrados")
-        st.markdown(f"Busca automática no site do [Investidor10]({url})")
+        st.markdown(f"<p class='reduced-space'>Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
         for titulo, porcentagem in titulos_info:
-            st.write(f"{titulo} - IPCA + {porcentagem}%")
+            st.markdown(f"<p class='reduced-space'>{titulo} - IPCA + {porcentagem}%</p>", unsafe_allow_html=True)
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
     # Exibição do resultado da função exibir_resultados() na barra lateral (media NTNB)
-    st.markdown(f"**Média NTN-B:** {media_ntnb_local:.2f}%")
-    st.markdown(f"**IPCA:** {ipca_elements[1].text.strip()}")
+    st.markdown(f"**Média NTN-B**: {media_ntnb_local:.2f}%")
+    st.markdown("### IPCA")
+    st.markdown(f"<p class='reduced-space'>Busca automática no site do <a href='{url_ibge}' target='_blank'>IBGE</a></p>", unsafe_allow_html=True)
+    st.markdown(f"**IPCA**: {ipca_elements[1].text.strip()}")
 
 def main():
-    st.header("Cálculo de preço teto para FIIs de tijolos")
+    st.header("Cálculo de preço teto para FIIs")
     ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
     spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, step=0.5, format="%.2f")
     vacancia = st.number_input("Qual a vacância (%):", value=0.0, step=0.01, format="%.2f")
@@ -88,7 +101,7 @@ def main():
                 df_resultados = pd.DataFrame(resultados)
 
                 def colorir_linhas(row):
-                    return ['background-color: #f0f0f0' if row.name % 2 == 0 else 'background-color: white'] * len(row)
+                    return ['background-color: #0E1117' if row.name % 2 == 0 else 'background-color: #262730'] * len(row)
 
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
                 st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), use_container_width=True)

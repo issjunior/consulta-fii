@@ -2,10 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 
 # URL do site
-url = 'https://www.ibge.gov.br/explica/inflacao.php'
+url_ibge = 'https://www.ibge.gov.br/explica/inflacao.php'
 
 # Realiza a requisição GET para o site
-response = requests.get(url)
+response = requests.get(url_ibge)
 
 # Verifica se a requisição foi bem-sucedida
 if response.status_code == 200:

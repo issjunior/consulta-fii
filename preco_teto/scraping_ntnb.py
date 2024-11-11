@@ -5,7 +5,7 @@ import re
 import statistics
 import streamlit as st
 
-url = "https://investidor10.com.br/tesouro-direto/"
+url_investidor10 = "https://investidor10.com.br/tesouro-direto/"
 
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def scrape_tesouro_ipca():
@@ -14,7 +14,7 @@ def scrape_tesouro_ipca():
     }
     
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url_investidor10, headers=headers)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
