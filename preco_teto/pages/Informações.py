@@ -2,9 +2,12 @@ import streamlit as st
 from scraping_ntnb import *
 from scraping_ipca import *
 
+# Exibe o IPCA
 st.markdown("<h3 style='color:red;'>IPCA</h3>", unsafe_allow_html=True)
 st.markdown(f"<p class='reduced-space'>Busca automática no site do <a href='{url_ibge}' target='_blank'>IBGE</a></p>", unsafe_allow_html=True)
 st.markdown(f"**IPCA**: {ipca_elements[1].text.strip()}")
+
+st.divider()
 
 # Exibe os títulos encontrados e suas porcentagens
 media_ntnb_local, titulos_info = exibir_resultados()

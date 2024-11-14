@@ -10,22 +10,25 @@ import matplotlib.pyplot as plt
 # Criando duas colunas
 col1, col2 = st.columns(2)
 
-# Adicionando a imagem na primeira coluna
+# Adicionando a explicação na primeira coluna (col1)
 with col1:
+    st.markdown("""
+    <div style="text-align: justify;">
+        <h1>Modelo de Gordon</h1>
+        Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.
+    </div>
+    """, unsafe_allow_html=True)
+
+# Adicionando a imagem e fórmula na segunda coluna (col2)
+with col2:
     #st.image("preco_teto/img/modelo_gordon.png")
     # Exibindo a fórmula do modelo de Gordon
     st.latex(r"P = \frac{D}{r - g}")
     st.markdown(""" 
-    Onde:
+    ## Onde:
     - **D**: Consideramos os 12 últimos.
-    - **r**: Média NTN-B + spread.
+    - **r**: Média NTN-B + spread (risco ou prêmio).
     - **g**: Taxa de crescimento dos dividendos.
-    """)
-
-# Adicionando a explicação na segunda coluna
-with col2:
-    st.markdown(""" 
-    Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.
     """)
 
 st.divider()
