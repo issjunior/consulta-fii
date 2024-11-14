@@ -111,6 +111,7 @@ def main():
                 # Verificar se o histórico contém dados antes de gerar o gráfico
                 if not historico.empty:
                     historico = historico[['Close']].dropna()
+                    data_corte = pd.to_datetime('today').normalize()
 
                     # Criando o gráfico de preços com Plotly
                     fig = go.Figure()
@@ -124,7 +125,7 @@ def main():
                         xaxis_title="Período",
                         yaxis_title="Preço (R$)",
                         xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
-                        xaxis_range=['2023-11-01', '2024-11-01']  # Limita a visualização para 1 ano inicialmente
+                        xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
                     )
 
                     # Exibe o gráfico interativo no Streamlit
@@ -152,7 +153,8 @@ def main():
                         title=f"Histórico de dividendos {ticker.replace('.SA', '')} no último ano)",
                         xaxis_title="Período",
                         yaxis_title="Dividendos (R$)",
-                        xaxis_rangeslider_visible=True  # Habilita o controle de zoom (range slider)
+                        xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
+                        xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
                     )
 
                     # Exibe o gráfico interativo no Streamlit
