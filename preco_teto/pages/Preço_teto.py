@@ -23,7 +23,7 @@ with col1:
 with col2:
     st.latex(r"P = \frac{D}{r - g}")
     st.markdown(""" 
-    ## Onde:
+    ##### Onde:
     - **D**: Consideramos os 12 últimos.
     - **r**: Média NTN-B + spread (risco ou prêmio).
     - **g**: Taxa de crescimento dos dividendos.
@@ -121,8 +121,8 @@ def main():
 
                     # Ajustes para o gráfico
                     fig.update_layout(
-                        title=f"Histórico de preço da cota {ticker.replace('.SA', '')} nos últimos 5 anos",
-                        xaxis_title="Período",
+                        title=f"Histórico de preço.",
+                        xaxis_title="Escolha o período",
                         yaxis_title="Preço (R$)",
                         xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
                         xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
@@ -150,8 +150,8 @@ def main():
 
                     # Ajustes para o gráfico de dividendos
                     fig_dividendos.update_layout(
-                        title=f"Histórico de dividendos {ticker.replace('.SA', '')} no último ano)",
-                        xaxis_title="Período",
+                        title=f"Histórico de dividendos.",
+                        xaxis_title="Escolha o período",
                         yaxis_title="Dividendos (R$)",
                         xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
                         xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
