@@ -8,7 +8,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # Criando duas colunas
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 # Adicionando a explicação na primeira coluna (col1)
 with col1:
@@ -21,12 +21,19 @@ with col1:
 
 # Adicionando a imagem e fórmula na segunda coluna (col2)
 with col2:
-    st.latex(r"P = \frac{D}{r - g}")
+    st.markdown("""
+    <div style="text-align: justify;">
+        Usamos os títulos NTN-B (Tesouro IPCA+) para precificar fundos imobiliários, porque eles oferecem uma taxa de retorno praticamente livre de risco e protegida contra a inflação. Essa taxa serve como base de comparação para o retorno esperado dos FIIs, já que, por terem maior risco, os fundos imobiliários precisam oferecer uma rentabilidade superior a média NTN-B. Além disso, essa comparação ajuda os investidores a avaliar se os FIIs estão caros ou baratos.
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.latex(r"PrecoTeto = \frac{D}{R - G}")
     st.markdown(""" 
-    ##### Onde:
-    - **D**: Consideramos os 12 últimos.
-    - **r**: Média NTN-B + spread (risco ou prêmio).
-    - **g**: Taxa de crescimento dos dividendos.
+    ##### Explicando cada termo:
+    - **D**: Dividend yield (DY). Consideramos os 12 últimos.
+    - **R**: Média NTN-B + SPREAD (risco ou prêmio).
+    - **G**: Taxa de crescimento dos dividendos.
     """)
 
 st.divider()
