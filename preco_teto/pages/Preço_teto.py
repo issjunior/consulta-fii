@@ -5,6 +5,7 @@ from calculos import *
 import yfinance as yf
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 
 # Criando duas colunas
 col1, col2 = st.columns(2)
@@ -100,19 +101,34 @@ def main():
 
                 st.divider()
 
+                # Gráficos
                 # Criar colunas lado a lado para os gráficos
                 col1, col2 = st.columns(2)
 
                 # Fixar o período em 5 anos
-                periodo = '5y'
-                historico = acao.history(period=periodo)
+                historico = acao.history(period="5y")
 
                 # Verificar se o histórico contém dados antes de gerar o gráfico
                 if not historico.empty:
                     historico = historico[['Close']].dropna()
-                    col1.markdown(f"##### Histórico de preço da cota {ticker.replace(".SA", "")} dos últimos 5 anos")
-                    col1.line_chart(historico, width=0, height=400, use_container_width=True)
 
+                    # Criando o gráfico de preços com Plotly
+                    fig = go.Figure()
+
+                    # Adicionando a linha de preços ao gráfico
+                    fig.add_trace(go.Scatter(x=historico.index, y=historico['Close'], mode='lines', name='Preço da Cota'))
+
+                    # Ajustes para o gráfico
+                    fig.update_layout(
+                        title=f"Histórico de preço da cota {ticker.replace('.SA', '')} nos últimos 5 anos",
+                        xaxis_title="Período",
+                        yaxis_title="Preço (R$)",
+                        xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
+                        xaxis_range=['2023-11-01', '2024-11-01']  # Limita a visualização para 1 ano inicialmente
+                    )
+
+                    # Exibe o gráfico interativo no Streamlit
+                    col1.plotly_chart(fig, use_container_width=True)
                 else:
                     col1.write("Histórico da cota não disponível para este ticker.")
 
@@ -125,11 +141,22 @@ def main():
                     data_corte = pd.to_datetime('today').normalize()
                     dividendos_5anos = dividendos[dividendos.index >= data_corte - pd.DateOffset(years=5)]
 
-                    if not dividendos_5anos.empty:
-                        col2.markdown(f"##### Histórico de dividendos {ticker.replace(".SA", "")} dos últimos 2 anos")
-                        col2.line_chart(dividendos_5anos, width=0, height=400, use_container_width=True)
-                    else:
-                        col2.write("Nenhum dividendo pago nos últimos 5 anos para este ticker.")
+                    # Criando o gráfico de dividendos com Plotly
+                    fig_dividendos = go.Figure()
+
+                    # Adicionando a linha de dividendos ao gráfico
+                    fig_dividendos.add_trace(go.Scatter(x=dividendos_5anos.index, y=dividendos_5anos, mode='markers+lines', name='Dividendos'))
+
+                    # Ajustes para o gráfico de dividendos
+                    fig_dividendos.update_layout(
+                        title=f"Histórico de dividendos {ticker.replace('.SA', '')} no último ano)",
+                        xaxis_title="Período",
+                        yaxis_title="Dividendos (R$)",
+                        xaxis_rangeslider_visible=True  # Habilita o controle de zoom (range slider)
+                    )
+
+                    # Exibe o gráfico interativo no Streamlit
+                    col2.plotly_chart(fig_dividendos, use_container_width=True)
                 else:
                     col2.write("Nenhum dividendo pago para este ticker.")
 
