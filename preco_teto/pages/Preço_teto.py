@@ -5,7 +5,6 @@ from calculos import *
 import yfinance as yf
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Criando duas colunas
 col1, col2 = st.columns(2)
@@ -14,15 +13,13 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("""
     <div style="text-align: justify;">
-        <h1>Modelo de Gordon</h1>
+        <h2>Modelo de Gordon</h2>
         Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.
     </div>
     """, unsafe_allow_html=True)
 
 # Adicionando a imagem e fórmula na segunda coluna (col2)
 with col2:
-    #st.image("preco_teto/img/modelo_gordon.png")
-    # Exibindo a fórmula do modelo de Gordon
     st.latex(r"P = \frac{D}{r - g}")
     st.markdown(""" 
     ## Onde:
@@ -53,7 +50,7 @@ def main():
     if st.button("Consultar"):
         if ticker:
             try:
-                media_ntnb_local, titulos_info = exibir_resultados()  # Chama exibir_resultados() para obter a média NTN-B
+                media_ntnb_local, titulos_info = exibir_resultados()
                 media_dividendos = obter_media_dividendos(ticker)
                 if media_dividendos is None:
                     st.warning(f"Código {ticker} não encontrado.")
@@ -101,54 +98,38 @@ def main():
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
                 st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), use_container_width=True)
 
+                st.divider()
+
                 # Criar colunas lado a lado para os gráficos
                 col1, col2 = st.columns(2)
 
-                # Fixar o período em 2 anos
-                periodo = '2y'
-
-                # Obter o histórico de preços do ticker com o período fixo
+                # Fixar o período em 5 anos
+                periodo = '5y'
                 historico = acao.history(period=periodo)
 
                 # Verificar se o histórico contém dados antes de gerar o gráfico
                 if not historico.empty:
-                    # Selecionar apenas a coluna de fechamento para o gráfico
                     historico = historico[['Close']].dropna()
+                    col1.markdown(f"##### Histórico de preço da cota {ticker.replace(".SA", "")} dos últimos 5 anos")
+                    col1.line_chart(historico, width=0, height=400, use_container_width=True)
 
-                    # Gerar o gráfico de linha com Matplotlib
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    ax.plot(historico.index, historico["Close"], color='tab:blue')
-                    ax.set_title(f"Histórico de cota do {ticker.replace('.SA', '')} dos últimos 2 anos")
-                    ax.set_xlabel("Data")
-                    ax.set_ylabel("Preço de Fechamento")
-
-                    # Exibir o gráfico no col1
-                    col1.pyplot(fig)
                 else:
                     col1.write("Histórico da cota não disponível para este ticker.")
 
-                # Construção do gráfico de dividendos usando Matplotlib
+                # Construção do gráfico de dividendos
                 dividendos = acao.dividends
 
                 # Verificar se há dividendos disponíveis
                 if not dividendos.empty:
-                    dividendos.index = dividendos.index.tz_localize(None)  # Remover o fuso horário
+                    dividendos.index = dividendos.index.tz_localize(None)
                     data_corte = pd.to_datetime('today').normalize()
-                    dividendos_2anos = dividendos[dividendos.index >= data_corte - pd.DateOffset(years=2)]
+                    dividendos_5anos = dividendos[dividendos.index >= data_corte - pd.DateOffset(years=5)]
 
-                    # Gerar gráfico de dividendos
-                    if not dividendos_2anos.empty:
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        ax.plot(dividendos_2anos.index, dividendos_2anos.values, marker='o', color='tab:green')
-                        ax.set_title(f"Dividendos pagos por {ticker.replace('.SA', '')} nos últimos 2 anos")
-                        ax.set_xlabel("Data")
-                        ax.set_ylabel("Valor do Dividendo (R$)")
-                        ax.grid(True)
-
-                        # Exibir o gráfico no col2
-                        col2.pyplot(fig)
+                    if not dividendos_5anos.empty:
+                        col2.markdown(f"##### Histórico de dividendos {ticker.replace(".SA", "")} dos últimos 2 anos")
+                        col2.line_chart(dividendos_5anos, width=0, height=400, use_container_width=True)
                     else:
-                        col2.write("Nenhum dividendo pago nos últimos 2 anos para este ticker.")
+                        col2.write("Nenhum dividendo pago nos últimos 5 anos para este ticker.")
                 else:
                     col2.write("Nenhum dividendo pago para este ticker.")
 
