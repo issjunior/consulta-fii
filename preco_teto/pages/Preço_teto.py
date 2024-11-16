@@ -7,6 +7,9 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# Definindo o layout para wide mode
+st.set_page_config(layout="wide")
+
 # Criando duas colunas
 col1, col2, col3 = st.columns(3)
 
