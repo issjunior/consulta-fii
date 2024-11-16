@@ -58,8 +58,8 @@ st.markdown(
 def main():
     st.header("Cálculo de preço teto para FIIs")
     ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
-    spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, step=0.5, format="%.2f")
-    vacancia = st.number_input("Qual a vacância (%):", value=0.0, step=0.01, format="%.2f")
+    spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, min_value=0.0, step=0.1, format="%.2f")
+    vacancia = st.number_input("Qual a vacância (%):", value=0.0, min_value=0.0, step=0.01, format="%.2f")
     tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os próximos 12 meses (%):", value=0.0, step=0.01, format="%.2f")
 
     if st.button("Consultar"):
