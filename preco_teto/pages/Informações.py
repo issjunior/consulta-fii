@@ -2,8 +2,12 @@ import streamlit as st
 from scraping_ntnb import *
 from scraping_ipca import *
 
-# Definindo o layout para wide mode
-st.set_page_config(layout="wide")
+# Configuração do layout
+st.set_page_config(
+    page_title="Sis. de Investimento",
+    page_icon="📊",
+    layout="wide",  # ou "centered"
+)
 
 # Exibe o IPCA
 st.markdown("<h3 style='color:red;'>IPCA</h3>", unsafe_allow_html=True)
