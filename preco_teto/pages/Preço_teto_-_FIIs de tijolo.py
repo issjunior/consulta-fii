@@ -120,8 +120,8 @@ def main():
                 # Criar colunas lado a lado para os gráficos
                 col1, col2 = st.columns(2)
 
-                # Fixar o período em 5 anos
-                historico = acao.history(period="5y")
+                # Fixar o período em 10 anos
+                historico = acao.history(period="10y")
 
                 # Verificar se o histórico contém dados antes de gerar o gráfico
                 if not historico.empty:
@@ -155,7 +155,7 @@ def main():
                 if not dividendos.empty:
                     dividendos.index = dividendos.index.tz_localize(None)
                     data_corte = pd.to_datetime('today').normalize()
-                    dividendos_5anos = dividendos[dividendos.index >= data_corte - pd.DateOffset(years=5)]
+                    dividendos_5anos = dividendos[dividendos.index >= data_corte - pd.DateOffset(years=10)]  # Periodo de 10 anos de dividendos
 
                     # Criando o gráfico de dividendos com Plotly
                     fig_dividendos = go.Figure()
