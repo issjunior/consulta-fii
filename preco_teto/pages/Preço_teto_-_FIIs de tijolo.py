@@ -96,15 +96,16 @@ def main():
                         acao.info.get('longName', 'N/A'),
                         ticker.replace(".SA", ""),
                         real(preco_atual),
-                        f"R$ {acao.info.get('fiftyTwoWeekLow', 'N/A')} - R$ {acao.info.get('fiftyTwoWeekHigh', 'N/A')}",
-                        f"{real(media_dividendos)} (DY anual de {media_dividendos_porcentagem:.2f}%)",
+                        f"{real(acao.info.get('fiftyTwoWeekLow', 'N/A'))} - {real(acao.info.get('fiftyTwoWeekHigh', 'N/A'))}",
+                        f"{real(media_dividendos)} (DY anual de {porcentagem(media_dividendos_porcentagem)})",
                         real(total_dividendos),
-                        f"{real(preco_teto)} (com spread de {spread:.2f}%)",
+                        f"{real(preco_teto)} (com spread de {porcentagem(spread)})",
                         f"{cotas_necessarias} cotas",
                         real(valor_cotas_magicnumber),
-                        f"{valor_cap_rate:.2f}%"
+                        f"{porcentagem(valor_cap_rate)}"
                     ]
                 }
+
                 df_resultados = pd.DataFrame(resultados)
 
                 def colorir_linhas(row):
