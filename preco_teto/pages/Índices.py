@@ -97,7 +97,10 @@ with col1:
         media_porcentagem = df_titulos['Porcentagem'].mean()
 
         # Adiciona a média como última linha do DataFrame
-        df_titulos.loc[len(df_titulos)] = ['Média de títulos NTN-B', f"{media_porcentagem:.2f} %"]
+        df_titulos.loc[len(df_titulos)] = ['Média de títulos NTN-B', media_porcentagem]
+        
+        # Aplica o símbolo de porcentagem a todos os valores da coluna 'Porcentagem'
+        df_titulos['Porcentagem'] = df_titulos['Porcentagem'].apply(lambda x: f"{x:.2f} %")
         
         # Exibe o DataFrame
         st.dataframe(df_titulos, use_container_width=True)
