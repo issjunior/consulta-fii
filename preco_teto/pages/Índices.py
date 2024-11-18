@@ -127,7 +127,7 @@ with col1:
         df_titulos = processar_titulos(titulos_info)
 
         # Exibe o DataFrame com os títulos
-        st.dataframe(df_titulos, use_container_width=True)
+        st.dataframe(df_titulos, hide_index=True, use_container_width=True)
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
