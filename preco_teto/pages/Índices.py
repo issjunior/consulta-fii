@@ -68,9 +68,9 @@ def criar_grafico(ipca_5anos, data_inicio_5anos, data_corte):
     
     return fig
 
-# Função para processar os títulos
+# Função para processar os títulos e adicionar a soma
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
-def processar_titulos(titulos_info):
+def processar_titulos(titulos_info, ultimo_ipca_formatado):
     # Converte os resultados para um DataFrame
     df_titulos = pd.DataFrame(titulos_info, columns=['Título', 'Porcentagem'])
 
@@ -86,10 +86,28 @@ def processar_titulos(titulos_info):
     # Aplica o símbolo de porcentagem a todos os valores da coluna 'Porcentagem'
     df_titulos['Porcentagem'] = df_titulos['Porcentagem'].map(lambda x: f"{x:.2f} %")
 
+    # Converte o valor do último IPCA para um número, removendo o '%'
+    ultimo_ipca_num = float(ultimo_ipca_formatado.replace(' %', ''))
+
+    # Cria a nova coluna 'Último IPCA' com o valor formatado
+    df_titulos['Último IPCA'] = ultimo_ipca_formatado
+
+    # Soma da coluna 'Porcentagem' (convertida para número) e 'Último IPCA' (convertido para número)
+    df_titulos['Soma'] = df_titulos['Porcentagem'].str.replace(' %', '').astype(float) + ultimo_ipca_num
+
+    # Formata a nova coluna 'Soma' para exibir como porcentagem
+    df_titulos['Soma'] = df_titulos['Soma'].map(lambda x: f"{x:.2f} %")
+
     return df_titulos
 
 # Obtém os dados IPCA
 ipca_filtrado_formatado, ipca_5anos, data_inicio_5anos, data_corte = obter_ipca()
+
+# Obtém o último valor bruto do IPCA antes da formatação
+ultimo_ipca_bruto = ipca_5anos.iloc[-1].values[0]
+
+# Formata o último valor do IPCA
+ultimo_ipca_formatado = f"{ultimo_ipca_bruto:.2f} %"
 
 # Layout 1 em duas colunas
 col1, col2 = st.columns(2)
@@ -98,14 +116,12 @@ col1, col2 = st.columns(2)
 with col1:
     st.title("IPCA")
     st.caption("Dados retirados do Banco Central (5 anos)")
-    st.dataframe(ipca_filtrado_formatado, use_container_width=True)
+    st.dataframe(ipca_filtrado_formatado, use_container_width=True, hide_index=True)
 
 # Coluna 2: Exibe o gráfico do IPCA
 with col2:
     if not ipca_5anos.empty:
-        # Cria o gráfico interativo
         fig = criar_grafico(ipca_5anos, data_inicio_5anos, data_corte)
-        # Exibe o gráfico
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.write("Dados do IPCA não disponíveis.")
@@ -124,9 +140,9 @@ with col1:
         st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
 
         # Processa os títulos encontrados
-        df_titulos = processar_titulos(titulos_info)
+        df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
 
-        # Exibe o DataFrame com os títulos
+        # Exibe o DataFrame com os títulos, agora incluindo a coluna 'Soma'
         st.dataframe(df_titulos, hide_index=True, use_container_width=True)
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
