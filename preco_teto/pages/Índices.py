@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 # Função para obter dados do IPCA
-@st.cache_data
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def obter_ipca():
     # Obtém os dados do IPCA (5 anos)
     ipca_5anos = sgs.get(13522)
@@ -22,7 +22,6 @@ def obter_ipca():
 
     # Define o período padrão para 5 anos e os últimos 12 meses
     data_inicio_5anos = data_corte - pd.DateOffset(years=5)  # 5 anos de histórico
-    data_inicio_12meses = data_corte - pd.DateOffset(years=1)  # Últimos 12 meses
 
     # Filtra os dados para os últimos 5 anos
     ipca_filtrado = ipca_5anos.loc[data_inicio_5anos:data_corte]
@@ -40,7 +39,7 @@ def obter_ipca():
     return ipca_filtrado_formatado, ipca_5anos, data_inicio_5anos, data_corte
 
 # Função para criar o gráfico
-@st.cache_data
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def criar_grafico(ipca_5anos, data_inicio_5anos, data_corte):
     # Define o início do intervalo como 12 meses atrás
     data_inicio_12meses = data_corte - pd.DateOffset(years=1)
@@ -70,7 +69,7 @@ def criar_grafico(ipca_5anos, data_inicio_5anos, data_corte):
     return fig
 
 # Função para processar os títulos
-@st.cache_data
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def processar_titulos(titulos_info):
     # Converte os resultados para um DataFrame
     df_titulos = pd.DataFrame(titulos_info, columns=['Título', 'Porcentagem'])
