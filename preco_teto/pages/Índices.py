@@ -57,7 +57,6 @@ with col2:
                 #mode="lines",
                 mode='markers+lines',
                 name="IPCA (5 anos)",
-                line=dict(color="blue"),
             )
         )
         
@@ -68,7 +67,6 @@ with col2:
             yaxis_title="IPCA (%)",
             xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)
             xaxis_range=[data_inicio_12meses, data_corte],  # Mostra apenas os últimos 12 meses inicialmente
-            template="plotly_white",
         )
 
         # Exibe o gráfico interativo no Streamlit
