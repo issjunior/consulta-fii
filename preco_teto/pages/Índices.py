@@ -30,8 +30,9 @@ ipca_filtrado = ipca_filtrado.iloc[::-1]
 # Remove a hora da coluna 'date' apenas no DataFrame para formatar as datas
 ipca_filtrado.index = pd.to_datetime(ipca_filtrado.index).strftime('%d/%m/%Y')
 
-# Formata os valores para adicionar o símbolo de '%'
-ipca_filtrado = ipca_filtrado.applymap(lambda x: f"{x:.2f} %")
+# Converte a coluna IPCA para float (caso necessário) e formata com o símbolo de '%'
+ipca_filtrado = ipca_filtrado.apply(pd.to_numeric, errors='coerce')  # Garante que os valores sejam numéricos
+ipca_filtrado_formatado = ipca_filtrado.map(lambda x: f"{x:.2f} %" if isinstance(x, (int, float)) else x)
 
 # Layout 1 em duas colunas
 col1, col2 = st.columns(2)
@@ -40,7 +41,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.title("IPCA")
     st.caption("Dados retirados do Banco Central (5 anos)")
-    st.dataframe(ipca_filtrado, use_container_width=True)  # Exibe os dados com '%' e usa toda a largura da coluna
+    st.dataframe(ipca_filtrado_formatado, use_container_width=True)  # Exibe os dados com '%' e usa toda a largura da coluna
 
 # Coluna 2: Exibe o DataFrame dos últimos 5 anos (invertido), com '%' ao lado dos valores
 with col2:
@@ -85,7 +86,7 @@ with col1:
     
     if titulos_info:
         st.title("Títulos IPCA+ encontrados")
-        st.caption(f"<p class='reduced-space'>Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
+        st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
         
         # Converte os resultados para um DataFrame
         df_titulos = pd.DataFrame(titulos_info, columns=['Título', 'Porcentagem'])
@@ -100,7 +101,7 @@ with col1:
         df_titulos.loc[len(df_titulos)] = ['Média de títulos NTN-B', media_porcentagem]
         
         # Aplica o símbolo de porcentagem a todos os valores da coluna 'Porcentagem'
-        df_titulos['Porcentagem'] = df_titulos['Porcentagem'].apply(lambda x: f"{x:.2f} %")
+        df_titulos['Porcentagem'] = df_titulos['Porcentagem'].map(lambda x: f"{x:.2f} %")
         
         # Exibe o DataFrame
         st.dataframe(df_titulos, use_container_width=True)
@@ -108,4 +109,5 @@ with col1:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
 with col2:
-    st.write("Texto")
+    st.markdown("##### Conceito")
+    st.markdown("Título de renda fixa emitido pelo governo brasileiro, com rendimento atrelado à inflação medida pelo IPCA (Índice de Preços ao Consumidor Amplo), que é o principal indicador da inflação no Brasil.")
