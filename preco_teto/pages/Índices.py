@@ -116,7 +116,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.title("IPCA")
     st.caption("Dados retirados do Banco Central (5 anos)")
-    st.dataframe(ipca_filtrado_formatado, use_container_width=True, hide_index=True)
+    st.dataframe(ipca_filtrado_formatado, use_container_width=True)
 
 # Coluna 2: Exibe o gráfico do IPCA
 with col2:
