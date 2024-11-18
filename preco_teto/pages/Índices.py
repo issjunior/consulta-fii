@@ -116,11 +116,11 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    # Exibe os títulos encontrados e suas porcentagens
+    # Exibe os títulos encontrados no investidor10 e suas porcentagens
     media_ntnb_local, titulos_info = exibir_resultados()
 
     if titulos_info:
-        st.title("Títulos IPCA+ encontrados")
+        st.title("Títulos IPCA+")
         st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
 
         # Processa os títulos encontrados
