@@ -151,3 +151,15 @@ with col1:
 with col2:
     st.markdown("##### Conceito")
     st.markdown("Título de renda fixa emitido pelo governo brasileiro, com rendimento atrelado à inflação medida pelo IPCA (Índice de Preços ao Consumidor Amplo), que é o principal indicador da inflação no Brasil.")
+
+st.divider()
+
+# Layout 3 em duas colunas
+col1, col2 = st.columns(2)
+
+with col1:
+    st.title("SELIC")
+
+with col2:
+    st.markdown("##### Conceito")
+    st.write("Sistema Especial de Liquidação e de Custódia é a taxa básica de juros da economia brasileira, usada como referência para outras taxas de juros e definida pelo Banco Central.")
