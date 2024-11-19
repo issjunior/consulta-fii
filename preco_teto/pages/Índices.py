@@ -115,8 +115,9 @@ col1, col2 = st.columns(2)
 # Coluna 1: Exibe os dados IPCA
 with col1:
     st.title("IPCA")
-    st.caption("Dados retirados do Banco Central (5 anos)")
+    st.caption("Índice Nacional de Preços ao Consumidor Amplo é o principal indicador de inflação do Brasil, medindo a variação de preços de bens e serviços para o consumidor final.")
     st.dataframe(ipca_filtrado_formatado, use_container_width=True)
+    st.caption("Fonte: Banco Central (últimos 5 anos)")
 
 # Coluna 2: Exibe o gráfico do IPCA
 with col2:
@@ -137,13 +138,13 @@ with col1:
 
     if titulos_info:
         st.title("Títulos IPCA+")
-        st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a></p>", unsafe_allow_html=True)
 
         # Processa os títulos encontrados
         df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
 
         # Exibe o DataFrame com os títulos, agora incluindo a coluna 'Soma'
         st.dataframe(df_titulos, hide_index=True, use_container_width=True)
+        st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a>.</p>", unsafe_allow_html=True)
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 

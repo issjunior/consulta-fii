@@ -120,8 +120,8 @@ def main():
                 # Criar colunas lado a lado para os gráficos
                 col1, col2 = st.columns(2)
 
-                # Fixar o período em 10 anos
-                historico = acao.history(period="10y")
+                # Fixar o período em 5 anos
+                historico = acao.history(period="5y")
 
                 # Verificar se o histórico contém dados antes de gerar o gráfico
                 if not historico.empty:
