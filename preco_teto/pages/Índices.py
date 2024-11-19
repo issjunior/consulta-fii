@@ -144,7 +144,7 @@ with col1:
 
         # Exibe o DataFrame com os títulos, agora incluindo a coluna 'Soma'
         st.dataframe(df_titulos, hide_index=True, use_container_width=True)
-        st.caption(f"Busca automática no site do <a href='{url_investidor10}' target='_blank'>Investidor10</a>.</p>", unsafe_allow_html=True)
+        st.caption(f"Fonte: <a href='{url_investidor10}' target='_blank'>Investidor10</a>.</p>", unsafe_allow_html=True)
     else:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
