@@ -112,7 +112,7 @@ def main():
                     return ['background-color: #0E1117' if row.name % 2 == 0 else 'background-color: #262730'] * len(row)
 
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
-                st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), use_container_width=True)
+                st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), hide_index=True, use_container_width=True)
 
                 st.divider()
 
