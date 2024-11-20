@@ -138,6 +138,7 @@ with col1:
 
     if titulos_info:
         st.title("Títulos IPCA+")
+        st.caption("Título de renda fixa emitido pelo governo brasileiro, com rendimento atrelado à inflação medida pelo IPCA (Índice de Preços ao Consumidor Amplo), que é o principal indicador da inflação no Brasil.")
 
         # Processa os títulos encontrados
         df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
@@ -149,8 +150,7 @@ with col1:
         st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
 
 with col2:
-    st.markdown("##### Conceito")
-    st.markdown("Título de renda fixa emitido pelo governo brasileiro, com rendimento atrelado à inflação medida pelo IPCA (Índice de Preços ao Consumidor Amplo), que é o principal indicador da inflação no Brasil.")
+    st.markdown("##### coluna 2")
 
 st.divider()
 
@@ -159,7 +159,17 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.title("SELIC")
+    st.caption("Sistema Especial de Liquidação e de Custódia é a taxa básica de juros da economia brasileira, usada como referência para outras taxas de juros e definida pelo Banco Central.")
 
 with col2:
-    st.markdown("##### Conceito")
-    st.write("Sistema Especial de Liquidação e de Custódia é a taxa básica de juros da economia brasileira, usada como referência para outras taxas de juros e definida pelo Banco Central.")
+    st.markdown("##### Coluna 2")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.title("CDI")
+    st.caption("Conceito de CDI.")
+
+with col2:
+    st.markdown("##### Coluna 2")
+    

@@ -5,7 +5,7 @@ from babel.numbers import format_currency
 def real(valor):
     return format_currency(valor, 'BRL', locale='pt_BR')
 
-def dollar(valor):
+def dolar(valor):
     return format_currency(valor, 'USD', locale='en_US')
 
 # Função auxiliar para formatar valores como porcentagem
