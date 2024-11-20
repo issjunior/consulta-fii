@@ -14,34 +14,18 @@ st.set_page_config(
     layout="wide",  # ou "centered"
 )
 
-# Criando duas colunas
-col1, col2, col3 = st.columns(3)
+st.title("Modelo de Gordon")
+st.markdown("Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.")
 
-# Adicionando a explicação na primeira coluna (col1)
-with col1:
-    st.markdown("""
-    <div style="text-align: justify;">
-        <h2>Modelo de Gordon</h2>
-        Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.
-    </div>
-    """, unsafe_allow_html=True)
+st.latex(r"PrecoTeto = \frac{D}{R - G}")
+st.markdown(""" 
+##### Explicando cada termo:
+- **D**: Dividend yield (DY). Consideramos os 12 últimos.
+- **R**: Média NTN-B + SPREAD (risco ou prêmio).
+- **G**: Taxa de crescimento dos dividendos.
+""")
 
-# Adicionando a imagem e fórmula na segunda coluna (col2)
-with col2:
-    st.markdown("""
-    <div style="text-align: justify;">
-        Usamos os títulos NTN-B (Tesouro IPCA+) para precificar fundos imobiliários, porque eles oferecem uma taxa de retorno praticamente livre de risco e protegida contra a inflação. Essa taxa serve como base de comparação para o retorno esperado dos FIIs, já que, por terem maior risco, os fundos imobiliários precisam oferecer uma rentabilidade superior a média NTN-B. Além disso, essa comparação ajuda os investidores a avaliar se os FIIs estão caros ou baratos.
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.latex(r"PrecoTeto = \frac{D}{R - G}")
-    st.markdown(""" 
-    ##### Explicando cada termo:
-    - **D**: Dividend yield (DY). Consideramos os 12 últimos.
-    - **R**: Média NTN-B + SPREAD (risco ou prêmio).
-    - **G**: Taxa de crescimento dos dividendos.
-    """)
+st.markdown("Usamos os títulos NTN-B (Tesouro IPCA+) para precificar fundos imobiliários, porque eles oferecem uma taxa de retorno praticamente livre de risco e protegida contra a inflação. Essa taxa serve como base de comparação para o retorno esperado dos FIIs, já que, por terem maior risco, os fundos imobiliários precisam oferecer uma rentabilidade superior a média NTN-B. Além disso, essa comparação ajuda os investidores a avaliar se os FIIs estão caros ou baratos.")
 
 st.divider()
 
