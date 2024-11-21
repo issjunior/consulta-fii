@@ -14,37 +14,30 @@ st.set_page_config(
     layout="wide",  # ou "centered"
 )
 
-st.title("Modelo de Gordon")
-st.markdown("Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.")
+with st.expander("Entenda o cálculo"):
+    st.title("Modelo de Gordon")
+    st.write("Fórmula utilizada para estimar o preço justo ou preço-teto de um ativo baseado em seus dividendos futuros. No contexto de fundos imobiliários, esse modelo assume que os dividendos crescem a uma taxa constante ao longo do tempo ou não subir.")
 
-st.latex(r"PrecoTeto = \frac{D}{R - G}")
-st.markdown(""" 
-##### Explicando cada termo:
-- **D**: Dividend yield (DY). Consideramos os 12 últimos.
-- **R**: Média NTN-B + SPREAD (risco ou prêmio).
-- **G**: Taxa de crescimento dos dividendos.
-""")
+    moldura = st.container(border=True)
+    moldura.image("img/modelo_gordon.png")
 
-st.markdown("Usamos os títulos NTN-B (Tesouro IPCA+) para precificar fundos imobiliários, porque eles oferecem uma taxa de retorno praticamente livre de risco e protegida contra a inflação. Essa taxa serve como base de comparação para o retorno esperado dos FIIs, já que, por terem maior risco, os fundos imobiliários precisam oferecer uma rentabilidade superior a média NTN-B. Além disso, essa comparação ajuda os investidores a avaliar se os FIIs estão caros ou baratos.")
+    st.markdown(""" 
+    ##### Explicando cada termo:
+    - **D**: Dividend yield (DY). Consideramos os 12 últimos.
+    - **R**: Média NTN-B + SPREAD (risco ou prêmio).
+    - **G**: Taxa de crescimento dos dividendos.
+    """)
+
+    st.write("Usamos os títulos NTN-B (Tesouro IPCA+) para precificar fundos imobiliários, porque eles oferecem uma taxa de retorno praticamente livre de risco e protegida contra a inflação. Essa taxa serve como base de comparação para o retorno esperado dos FIIs, já que, por terem maior risco, os fundos imobiliários precisam oferecer uma rentabilidade superior a média NTN-B. Além disso, essa comparação ajuda os investidores a avaliar se os FIIs estão caros ou baratos.")
 
 st.divider()
-
-# classe para reduzir o espaçamento no st.markdown
-st.markdown(
-    """
-    <style>
-    .reduced-space { margin-bottom: -10px; }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 def main():
     st.header("Cálculo de preço teto para FIIs")
     ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
     spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, min_value=0.0, step=0.1, format="%.2f")
     vacancia = st.number_input("Qual a vacância (%):", value=0.0, min_value=0.0, step=0.01, format="%.2f")
-    tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os próximos 12 meses (%):", value=0.0, step=0.01, format="%.2f")
+    tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os próximos 12 meses (%):",min_value=0.0, value=0.0, step=0.01, format="%.2f")
 
     if st.button("Consultar"):
         if ticker:
