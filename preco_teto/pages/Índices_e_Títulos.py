@@ -14,8 +14,15 @@ st.set_page_config(
 # Função para obter dados do IPCA
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def obter_ipca():
-    # Obtém os dados do IPCA (5 anos)
-    ipca_5anos = sgs.get(13522)
+    try:
+        # Obtém os dados do IPCA (5 anos)
+        ipca_5anos = sgs.get(13522)  # busco o código '13522' no https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries
+        if ipca_5anos is None or ipca_5anos.empty:  # Verifica se a resposta é inválida
+            raise ValueError("Nenhum dado foi retornado para o IPCA.")
+    except Exception as erro_busca_ipca:
+        st.warning("Não foi possível obter os dados do IPCA (5 anos). Verifique sua conexão ou tente novamente mais tarde.")
+        st.error(f"Código do erro: {erro_busca_ipca}")
+        return None, None, None, None  # Retorna valores default em caso de erro
 
     # Define a data de corte como a última data disponível
     data_corte = pd.to_datetime("today").normalize()
