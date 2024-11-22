@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import streamlit as st
-from modulos.config import *
+from config import *
 
 # Configuração do layout do Streamlit
 st.set_page_config(

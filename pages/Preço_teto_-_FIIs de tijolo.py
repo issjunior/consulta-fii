@@ -1,4 +1,4 @@
-from modulos.config import *
+from config import *
 from modulos.scraping_ntnb import *
 from modulos.dividendos import *
 from modulos.calculos import *
