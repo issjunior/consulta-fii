@@ -2,7 +2,7 @@ from bcb import sgs
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from scraping_ntnb import *
+from modulos.scraping_ntnb import *
 
 # Configuração do layout do Streamlit
 st.set_page_config(

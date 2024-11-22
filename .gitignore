@@ -1,4 +1,2 @@
 # Arquivos para não serem versionados 
-preco_teto/__pycache__/
-testes/__pycache__/
-*.psy
+__pycache__
