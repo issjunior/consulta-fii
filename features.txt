@@ -1,8 +1,8 @@
 1. Informações para teto de preço fii tijolo
     -scraping
-    --Incluir P/VP (investidor10.com.br)
     -- CAP Rate OK
+    --Incluir P/VP (investidor10.com.br)
     -- FFO (Funds from Operations) - fudamentus.com.br
     -- FFO Yield - fudamentus.com.br
 
-2. Fazar cálculo de FII d papel
+2. Fazer cálculo de FII de papel
