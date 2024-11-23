@@ -1,5 +1,6 @@
 from config import *
 from modulos.scraping_ntnb import *
+from modulos.scraping_valorpatrimonial import *
 from modulos.dividendos import *
 from modulos.calculos import *
 import yfinance as yf
@@ -55,6 +56,9 @@ def main():
                 cotas_necessarias = calcular_cotas_necessarias(preco_atual, media_dividendos)
                 valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
                 valor_cap_rate = calcular_cap_rate_ajustado(media_dividendos, vacancia, preco_atual)
+                #valor_obter_pvp = obter_pvp(ticker)
+                valor_obter_pvp = obter_pvp(ticker)
+                #valor_obter_pvp = float(valor_obter_pvp) if isinstance(valor_obter_pvp, str) and valor_obter_pvp.isdigit() else 0.0
 
                 resultados = {
                     "Indicador": [
@@ -67,7 +71,8 @@ def main():
                         "Preço Teto",
                         "Magic Number",
                         "Valor para Magic Number",
-                        "Cap Rate Ajustado (considerando vacância)"
+                        "Cap Rate Ajustado (considerando vacância)",
+                        "P/VP"  # Corrigido aqui!
                     ],
                     "Valor": [
                         acao.info.get('longName', 'N/A'),
@@ -79,10 +84,10 @@ def main():
                         f"{real(preco_teto)} (com spread de {porcentagem(spread)})",
                         f"{cotas_necessarias} cotas",
                         real(valor_cotas_magicnumber),
-                        f"{porcentagem(valor_cap_rate)}"
+                        f"{porcentagem(valor_cap_rate)}",
+                        f"{porcentagem(valor_obter_pvp)}"
                     ]
                 }
-
                 df_resultados = pd.DataFrame(resultados)
 
                 def colorir_linhas(row):
