@@ -124,7 +124,8 @@ col1, col2 = st.columns(2)
 with col1:
     st.title("IPCA")
     st.caption("Índice Nacional de Preços ao Consumidor Amplo é o principal indicador de inflação do Brasil, medindo a variação de preços de bens e serviços para o consumidor final.")
-    st.dataframe(ipca_filtrado_formatado, use_container_width=True)
+    ipca_filtrado_formatado.columns = ["Código SGS IPCA - 13522"] # renomeia coluna
+    st.dataframe(ipca_filtrado_formatado, height=245, use_container_width=True)
     st.caption(f"Fonte: Banco Central do Brasil <a href='https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries' target='_blank'>(SGS)</a>.</p>", unsafe_allow_html=True)
 
 # Coluna 2: Exibe o gráfico do IPCA

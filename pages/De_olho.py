@@ -12,12 +12,15 @@ st.set_page_config(
 
 def obter_dados_bitcoin():
     data_corte = pd.to_datetime("today").normalize()
-    data_inicio = data_corte - pd.DateOffset(years=2)  # periodo de pesquisa
+    data_inicio = data_corte - pd.DateOffset(years=2)  # período de pesquisa
     
     dados_btc = yf.download("BTC-USD", start=data_inicio, end=data_corte)
-    dados_btc = yf.download("BTC-USD", start=data_inicio, end=data_corte)
-    dados_btc.drop(columns=["Adj Close", "Open", "Volume"], inplace=True)  # exclui a coluna 'Adj Close' e 'Open'
+    dados_btc.drop(columns=["Adj Close", "Open", "Volume"], inplace=True)  # exclui colunas desnecessárias
     dados_btc = dados_btc.sort_index(ascending=False)
+    
+    # Ajusta o índice para o formato de data brasileiro (dd/mm/aaaa)
+    dados_btc.index = pd.to_datetime(dados_btc.index).strftime('%d/%m/%Y')
+    
     return dados_btc, data_inicio, data_corte
 
 # Obtém os dados do Bitcoin
@@ -48,11 +51,11 @@ if not dados_btc.empty:
         st.metric(label="Mínima no Período", value=dolar(preco_minimo))
 
 # Adiciona informações sobre o período dos dados
-st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')}")
+st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
 
 if not dados_btc.empty:
-    #st.title("Dados do Bitcoin")
-    st.dataframe(dados_btc, use_container_width=True)  # limita a visualização em 7 linhas, mas permite visualizar o restante do dt
+    dados_btc.columns = ["Fechamento", "Máximo", "Mínimo"] # renomeia colunas
+    st.dataframe(dados_btc, height=140, use_container_width=True)  # limita a visualização em 7 linhas, mas permite visualizar o restante do dt
 else:
     st.error("Dados do Bitcoin não disponíveis para exibição.")
 
