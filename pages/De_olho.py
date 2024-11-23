@@ -31,13 +31,11 @@ if not dados_btc.empty:
     st.subheader("Métricas do Bitcoin")
     col1, col2, col3, col4 = st.columns(4)
     
-    # Obtém os valores e converte para float
+    # Obtém os valores e converte para float para as métricas
     ultimo_preco = float(dados_btc['Close'].iloc[0])
     penultimo_preco = float(dados_btc['Close'].iloc[1])
     primeiro_preco = float(dados_btc['Close'].iloc[-1])
-
     preco_maximo = float(dados_btc['High'].max())
-    
     preco_minimo = float(dados_btc['Low'].min())
     
     with col1:
@@ -55,7 +53,7 @@ st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_co
 
 if not dados_btc.empty:
     dados_btc.columns = ["Fechamento", "Máximo", "Mínimo"] # renomeia colunas
-    st.dataframe(dados_btc, height=140, use_container_width=True)  # limita a visualização em 7 linhas, mas permite visualizar o restante do dt
+    st.dataframe(dados_btc, height=140, use_container_width=True)  # datagrama
 else:
     st.error("Dados do Bitcoin não disponíveis para exibição.")
 
