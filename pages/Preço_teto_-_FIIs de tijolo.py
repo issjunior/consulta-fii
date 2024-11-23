@@ -42,7 +42,7 @@ def main():
     if st.button("Consultar"):
         if ticker:
             try:
-                media_ntnb_local, titulos_info = exibir_resultados()
+                media_ntnb_local, titulos_info = exibir_resultados() # média dos titulos NTN-B do modulo "scraping.ntnb.py"
                 media_dividendos = obter_media_dividendos(ticker)
                 if media_dividendos is None:
                     st.warning(f"Código {ticker} não encontrado.")
