@@ -32,11 +32,11 @@ if not dados_btc.empty:
     col1, col2, col3, col4 = st.columns(4)
     
     # Obtém os valores e converte para float para as métricas
-    ultimo_preco = float(dados_btc['Close'].iloc[0])
-    penultimo_preco = float(dados_btc['Close'].iloc[1])
-    primeiro_preco = float(dados_btc['Close'].iloc[-1])
-    preco_maximo = float(dados_btc['High'].max())
-    preco_minimo = float(dados_btc['Low'].min())
+    ultimo_preco = dados_btc['Close'].iloc[0].item()
+    penultimo_preco = dados_btc['Close'].iloc[1].item()
+    primeiro_preco = dados_btc['Close'].iloc[-1].item()
+    preco_maximo = dados_btc['High'].max().item()
+    preco_minimo = dados_btc['Low'].min().item()
     
     with col1:
         st.metric(label="Preço Atual", value=dolar(ultimo_preco), delta=dolar(penultimo_preco))
