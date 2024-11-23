@@ -70,7 +70,7 @@ def main():
                         "Magic Number",
                         "Valor para Magic Number",
                         "Cap Rate Ajustado (considerando vacância)",
-                        "P/VP"  # Corrigido aqui!
+                        "P/VP"
                     ],
                     "Valor": [
                         acao.info.get('longName', 'N/A'),
