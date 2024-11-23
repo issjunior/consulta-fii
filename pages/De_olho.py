@@ -50,16 +50,10 @@ if not dados_btc.empty:
 # Adiciona informações sobre o período dos dados
 st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')}")
 
-# Divisão do layout em duas colunas
-col1, col2 = st.columns(2)
+if not dados_btc.empty:
+    #st.title("Dados do Bitcoin")
+    st.dataframe(dados_btc, use_container_width=True)  # limita a visualização em 7 linhas, mas permite visualizar o restante do dt
+else:
+    st.error("Dados do Bitcoin não disponíveis para exibição.")
 
-# Exibição na coluna 1 (dados do Bitcoin)
-with col1:
-    if not dados_btc.empty:
-        st.title("Dados do Bitcoin")
-        st.dataframe(dados_btc, use_container_width=True)  # limita a visualização em 7 linhas, mas permite visualizar o restante do dt
-    else:
-        st.error("Dados do Bitcoin não disponíveis para exibição.")
-
-with col2:
-    st.write("Coluna 2")
+st.divider()
