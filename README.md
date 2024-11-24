@@ -28,7 +28,7 @@ Tecnologias Utilizadas
 
 Como Executar o Projeto
 Clone o Repositório:
-git clone https://github.com/seu-usuario/sistema-consulta-investimentos.git
+git clone https://github.com/issjunior/consulta-fii.git
 cd sistema-consulta-investimentos
 Crie um Ambiente Virtual e Ative-o:
 
@@ -40,7 +40,7 @@ Instale as Dependências:
 pip install -r requirements.txt
 Execute a Aplicação:
 
-streamlit run app.py
+streamlit run Home.py
 Acesse no Navegador:
 
 O Streamlit abrirá automaticamente no navegador ou estará disponível em http://localhost:8501.
@@ -55,6 +55,7 @@ Estrutura do Projeto
     └── 📜 Índices_e_Títulos.py
     └── 📜 Preço teto_-_FIIs_de_Papel.py
     └── 📜 Preço_teto_-_FIIs de tijolo.py
+├── 📜 Home.py # Página inicial
 ├── 📜 requirements.txt # Dependências do projeto
 ├── 📜 config.py        # Formatação de moedas e porcentagem  
 
