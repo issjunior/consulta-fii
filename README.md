@@ -40,7 +40,6 @@ Implementação do _Modelo de Gordon_ para calcular o preço teto de FIIs, basea
 ### Clone o Repositório:
 ```bash
 git clone https://github.com/issjunior/consulta-fii.git
-cd sistema-consulta-investimentos
 ```
 ---
 
@@ -53,7 +52,6 @@ pip install -r requirements.txt
 
 Execute a Aplicação:
 ```bash
-
 streamlit run Home.py
 ```
 
