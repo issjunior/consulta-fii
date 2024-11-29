@@ -38,12 +38,13 @@ with tab1:
         # Obtém os valores e converte para float para as métricas
         ultimo_preco = dados_btc['Close'].iloc[0].item()
         penultimo_preco = dados_btc['Close'].iloc[1].item()
+        delta_preco = ultimo_preco - penultimo_preco
         primeiro_preco = dados_btc['Close'].iloc[-1].item()
         preco_maximo = dados_btc['High'].max().item()
         preco_minimo = dados_btc['Low'].min().item()
         
         with col1:
-            st.metric(label="Preço Atual", value=dolar(ultimo_preco), delta=dolar(penultimo_preco))
+            st.metric(label="Preço Atual", value=dolar(ultimo_preco), delta=dolar(delta_preco))
         with col2:
             variacao = ((ultimo_preco - primeiro_preco) / primeiro_preco) * 100
             st.metric(label="Variação no Período", value=porcentagem(variacao))
@@ -60,6 +61,15 @@ with tab1:
         st.dataframe(dados_btc, use_container_width=True)  # datagrama
     else:
         st.error("Dados do Bitcoin não disponíveis para exibição.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+    # Exibir o índice Fear & Greed no Streamlit
+        st.markdown('<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Gráfico de medo & ganância do Bitcoin" />', unsafe_allow_html=True)
+
+    with col2:
+        st.write("Col 2")
 
 st.divider()
 
