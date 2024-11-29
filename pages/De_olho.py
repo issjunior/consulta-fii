@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 from config import *
+from modulos.scraping_fear_greed_btc import *
 
 # Configuração do layout do Streamlit
 st.set_page_config(
@@ -65,11 +66,18 @@ with tab1:
     col1, col2 = st.columns(2)
 
     with col1:
-    # Exibir o índice Fear & Greed no Streamlit
+    # Exibir o gráfico índice Fear & Greed no Streamlit
         st.markdown('<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Gráfico de medo & ganância do Bitcoin" />', unsafe_allow_html=True)
 
     with col2:
-        st.write("Col 2")
+        st.subheader("Histórico de medo e ganância do BTC")
+        # Chama a função que retorna os valores
+        btc_fear_greed_now, btc_fear_greed_yesterday, btc_fear_greed_last_week, btc_fear_greed_last_month = alternative()
+
+        st.metric(label="Hoje", value=btc_fear_greed_now)
+        st.metric(label="Ontem", value=btc_fear_greed_yesterday)
+        st.metric(label="Última semana", value=btc_fear_greed_last_week)
+        st.metric(label="Último mês", value=btc_fear_greed_last_month)
 
 st.divider()
 
