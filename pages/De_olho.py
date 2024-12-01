@@ -70,7 +70,7 @@ with tab1:
         st.markdown('<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Gráfico de medo & ganância do Bitcoin" />', unsafe_allow_html=True)
 
     with col2:
-        st.subheader("Histórico de medo e ganância do BTC")
+        st.subheader("Índice Fear & Greed Cripto")
         # Chama a função que retorna os valores
         btc_fear_greed_now, btc_fear_greed_yesterday, btc_fear_greed_last_week, btc_fear_greed_last_month = alternative()
 
@@ -78,6 +78,8 @@ with tab1:
         st.metric(label="Ontem", value=btc_fear_greed_yesterday)
         st.metric(label="Última semana", value=btc_fear_greed_last_week)
         st.metric(label="Último mês", value=btc_fear_greed_last_month)
+        st.caption("Fonte: <a href='https://alternative.me/crypto/' target='_blank'>alternative.me</a>.", unsafe_allow_html=True)
+
 
 st.divider()
 
