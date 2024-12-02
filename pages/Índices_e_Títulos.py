@@ -1,5 +1,6 @@
 from config import *
 from modulos.scraping_ntnb import *
+from modulos.selic import *
 from bcb import sgs
 import pandas as pd
 import plotly.graph_objects as go
@@ -163,6 +164,9 @@ with col2:
 
 st.divider()
 
+# Obtém os dados da SELIC no meio do mês
+selic_formatado, selic, data_inicio_5anos, data_corte = obter_selic()
+
 # Layout 3 em duas colunas
 col1, col2 = st.columns(2)
 
@@ -170,8 +174,20 @@ with col1:
     st.title("SELIC")
     st.caption("Sistema Especial de Liquidação e de Custódia é a taxa básica de juros da economia brasileira, usada como referência para outras taxas de juros e definida pelo Banco Central.")
 
-with col2:
-    st.markdown("##### Coluna 2")
+    # Exibe o DataFrame da SELIC
+    if selic_formatado is not None:
+        selic_formatado.columns = ["Código SGS SELIC - 432"]  # Renomeia a coluna
+        st.dataframe(selic_formatado, height=245, use_container_width=True)
+    else:
+        st.write("Dados da SELIC não disponíveis.")
+
+    with col2:
+        # Exibe o gráfico da SELIC no meio do mês
+        if selic is not None and not selic.empty:
+            fig_selic_meio_mes = criar_grafico_selic(selic)
+            st.plotly_chart(fig_selic_meio_mes, use_container_width=True)
+        else:
+            st.write("Dados da SELIC não disponíveis.")
 
 col1, col2 = st.columns(2)
 
