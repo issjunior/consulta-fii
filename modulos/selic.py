@@ -71,15 +71,3 @@ def criar_grafico_selic(selic_5anos, data_inicio_5anos, data_corte):
     )
 
     return fig
-
-# Obtém os dados da SELIC e as datas
-selic_filtrado_formatado, selic_5anos, data_inicio_5anos, data_corte = obter_selic()
-
-# Verifica se os dados foram obtidos corretamente
-if selic_5anos is not None:
-    # Exibe o DataFrame da SELIC com os valores únicos
-    st.dataframe(selic_filtrado_formatado)
-
-    # Cria o gráfico da SELIC passando os três parâmetros necessários
-    fig_selic_meio_mes = criar_grafico_selic(selic_5anos, data_inicio_5anos, data_corte)
-    st.plotly_chart(fig_selic_meio_mes)
