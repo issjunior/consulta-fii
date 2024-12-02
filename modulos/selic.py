@@ -3,12 +3,7 @@ from bcb import sgs
 import pandas as pd
 import plotly.graph_objects as go
 
-import numpy as np
-
-import streamlit as st
-from bcb import sgs
-import pandas as pd
-
+# Função para obter os dados da SELIC
 @st.cache_data(ttl=10800)  # TTL em segundos (3 horas)
 def obter_selic():
     try:
@@ -33,6 +28,9 @@ def obter_selic():
     # Garante que o índice seja datetime
     selic_filtrado.index = pd.to_datetime(selic_filtrado.index)
 
+    # Remove valores consecutivos iguais e NaN
+    selic_filtrado = selic_filtrado[selic_filtrado.diff().fillna(1) != 0].dropna()
+
     # Inverte a ordem do DataFrame para que as datas mais recentes fiquem em cima
     selic_filtrado = selic_filtrado.iloc[::-1]
 
@@ -46,15 +44,20 @@ def obter_selic():
     return selic_filtrado_formatado, selic_5anos, data_inicio_5anos, data_corte
 
 # Função para criar o gráfico da SELIC
-@st.cache_data(ttl=10800)
-def criar_grafico_selic(selic_filtrado_formatado):
+def criar_grafico_selic(selic_5anos, data_inicio_5anos, data_corte):
+    # Define o início do intervalo como 12 meses atrás
+    data_inicio_12meses = data_corte - pd.DateOffset(years=1)
+
+    # Filtra os dados para os últimos 5 anos
+    selic_filtrado_5anos = selic_5anos.loc[data_inicio_5anos:data_corte]
+
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=selic_filtrado_formatado.index,
-            y=selic_filtrado_formatado.values.flatten(),
-            mode='lines+markers',
-            name="Taxa SELIC"
+            x=selic_filtrado_5anos.index,
+            y=selic_filtrado_5anos.values.flatten(),  # Transforma em vetor simples
+            mode='markers+lines',
+            name="Taxa SELIC",
         )
     )
 
@@ -63,7 +66,20 @@ def criar_grafico_selic(selic_filtrado_formatado):
         title="Histórico da SELIC (Últimos 5 anos)",
         xaxis_title="Período",
         yaxis_title="SELIC (%)",
-        xaxis_rangeslider_visible=True,
+        xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)
+        xaxis_range=[data_inicio_12meses, data_corte],  # Mostra os últimos 12 meses inicialmente
     )
 
     return fig
+
+# Obtém os dados da SELIC e as datas
+selic_filtrado_formatado, selic_5anos, data_inicio_5anos, data_corte = obter_selic()
+
+# Verifica se os dados foram obtidos corretamente
+if selic_5anos is not None:
+    # Exibe o DataFrame da SELIC com os valores únicos
+    st.dataframe(selic_filtrado_formatado)
+
+    # Cria o gráfico da SELIC passando os três parâmetros necessários
+    fig_selic_meio_mes = criar_grafico_selic(selic_5anos, data_inicio_5anos, data_corte)
+    st.plotly_chart(fig_selic_meio_mes)

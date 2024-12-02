@@ -181,14 +181,15 @@ with col1:
     else:
         st.write("Dados da SELIC não disponíveis.")
 
-    with col2:
-        # Exibe o gráfico da SELIC no meio do mês
-        if selic is not None and not selic.empty:
-            fig_selic_meio_mes = criar_grafico_selic(selic)
-            st.plotly_chart(fig_selic_meio_mes, use_container_width=True)
-        else:
-            st.write("Dados da SELIC não disponíveis.")
-
+with col2:
+    # Exibe o gráfico da SELIC no meio do mês
+    if selic is not None and not selic.empty:
+        # Passa todos os argumentos necessários para criar o gráfico
+        fig_selic_meio_mes = criar_grafico_selic(selic, data_inicio_5anos, data_corte)
+        st.plotly_chart(fig_selic_meio_mes, use_container_width=True)
+    else:
+        st.write("Dados da SELIC não disponíveis.")
+    
 col1, col2 = st.columns(2)
 
 with col1:
