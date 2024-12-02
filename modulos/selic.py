@@ -47,12 +47,12 @@ def obter_selic():
 
 # Função para criar o gráfico da SELIC
 @st.cache_data(ttl=10800)
-def criar_grafico_selic(selic):
+def criar_grafico_selic(selic_filtrado_formatado):
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=selic.index,
-            y=selic.values.flatten(),
+            x=selic_filtrado_formatado.index,
+            y=selic_filtrado_formatado.values.flatten(),
             mode='lines+markers',
             name="Taxa SELIC"
         )
