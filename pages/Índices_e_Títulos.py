@@ -197,5 +197,5 @@ with col1:
     st.caption("Conceito de CDI.")
 
 with col2:
-    st.markdown("##### Coluna 2")
+    st.title("IFIX")
     

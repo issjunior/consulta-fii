@@ -1,6 +1,6 @@
 # Sistema de Consulta para Investimentos
 
-Este projeto é um sistema de consulta voltado para investidores que desejam monitorar indicadores econômicos, acompanhar ativos e estimar o preço teto de Fundos Imobiliários (FIIs) utilizando o modelo de Gordon. A aplicação foi desenvolvida com **Streamlit** para interface frontend e utiliza a biblioteca **python-bcb** para recuperar dados financeiros atualizados como **IPCA**, **CDI** e **SELIC**.
+Este projeto é um sistema de consulta voltado para investidores que desejam monitorar indicadores econômicos, acompanhar ativos e estimar o preço máximo (teto) de Fundos Imobiliários (FIIs) utilizando o modelo de Gordon. A aplicação foi desenvolvida com **Streamlit** para interface frontend e utiliza a biblioteca **python-bcb** para recuperar dados financeiros atualizados como **IPCA**, **CDI** e **SELIC**, além de scraping para buscas pontuais de informações.
 
 ---
 
