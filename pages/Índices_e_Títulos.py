@@ -63,6 +63,7 @@ def criar_grafico(ipca_5anos, data_inicio_5anos, data_corte):
             y=ipca_filtrado_5anos.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
             name="IPCA (5 anos)",
+            hovertemplate="<b>Data:</b> %{x}<br><b>IPCA:</b> %{y:.2f} %<extra></extra>",
         )
     )
     

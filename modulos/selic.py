@@ -58,6 +58,7 @@ def criar_grafico_selic(selic_5anos, data_inicio_5anos, data_corte):
             y=selic_filtrado_5anos.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
             name="Taxa SELIC",
+            hovertemplate="<b>Data:</b> %{x}<br><b>SELIC:</b> %{y:.2f} %<extra></extra>",
         )
     )
 
