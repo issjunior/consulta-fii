@@ -96,7 +96,7 @@ def main():
 
                 st.divider()
 
-                # Gráficos
+                # Gráficos do histórico de cotas
                 # Criar colunas lado a lado para os gráficos
                 col1, col2 = st.columns(2)
 
@@ -112,7 +112,14 @@ def main():
                     fig = go.Figure()
 
                     # Adicionando a linha de preços ao gráfico
-                    fig.add_trace(go.Scatter(x=historico.index, y=historico['Close'], mode='lines', name='Preço da Cota'))
+                    fig.add_trace(go.Scatter(
+                        x=historico.index,
+                        y=historico['Close'],
+                        mode='lines',
+                        name='Preço da Cota',
+                        hovertemplate="<b>Data:</b> %{x}<br><b>Valor Cota:</b> %{y:.2f}<extra></extra>"
+                        )
+                    )
 
                     # Ajustes para o gráfico
                     fig.update_layout(
@@ -141,7 +148,14 @@ def main():
                     fig_dividendos = go.Figure()
 
                     # Adicionando a linha de dividendos ao gráfico
-                    fig_dividendos.add_trace(go.Scatter(x=dividendos_5anos.index, y=dividendos_5anos, mode='markers+lines', name='Dividendos'))
+                    fig_dividendos.add_trace(go.Scatter(
+                        x=dividendos_5anos.index,
+                        y=dividendos_5anos,
+                        mode='markers+lines',
+                        name='Dividendos',
+                        hovertemplate="<b>Data:</b> %{x}<br><b>Dividendo:</b> %{y:.2f}<extra></extra>"
+                        )
+                    )
 
                     # Ajustes para o gráfico de dividendos
                     fig_dividendos.update_layout(
