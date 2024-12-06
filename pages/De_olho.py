@@ -31,7 +31,8 @@ with tab1:
     # Obtém os dados do Bitcoin
     dados_btc, data_inicio, data_corte = obter_dados_bitcoin()
 
-    # Adiciona algumas métricas interessantes
+    # Primeira linha
+    # Métricas BTC
     if not dados_btc.empty:
         st.subheader("Métricas do Bitcoin")
         col1, col2, col3, col4 = st.columns(4)
@@ -57,12 +58,18 @@ with tab1:
     # Adiciona informações sobre o período dos dados
     st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
 
-    if not dados_btc.empty:
-        dados_btc.columns = ["Fechamento", "Máximo", "Mínimo"] # renomeia colunas
-        st.dataframe(dados_btc, use_container_width=True)  # datagrama
-    else:
-        st.error("Dados do Bitcoin não disponíveis para exibição.")
+    # Segunda linha
+    col1, col2 = st.columns(2)
+    with col1:
+        if not dados_btc.empty:
+            dados_btc.columns = ["Fechamento", "Máximo", "Mínimo"] # renomeia colunas
+            st.dataframe(dados_btc, use_container_width=True)  # datagrama
+        else:
+            st.error("Dados do Bitcoin não disponíveis para exibição.")
+    with col2:
+        st.caption("Gráfico")
 
+    # Terceira linha
     col1, col2 = st.columns(2)
 
     with col1:
