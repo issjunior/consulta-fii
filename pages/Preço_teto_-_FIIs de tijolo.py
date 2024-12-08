@@ -35,10 +35,10 @@ st.divider()
 
 def main():
     st.header("Cálculo de preço teto para FIIs")
-    ticker = st.text_input("Digite o ticker do FII:", "").upper() + ".SA"
-    spread = st.number_input("Qual o spread (risco) do FII:", value=2.5, min_value=0.0, step=0.1, format="%.2f")
-    vacancia = st.number_input("Qual a vacância (%):", value=0.0, min_value=0.0, step=0.01, format="%.2f")
-    tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os próximos 12 meses (%):",min_value=0.0, value=0.0, step=0.01, format="%.2f")
+    ticker = st.text_input("Ticker do FII:", "").upper() + ".SA"
+    spread = st.number_input("Spread (prêmio) do FII:", value=2.5, min_value=0.0, step=0.1, format="%.2f")
+    vacancia = st.number_input("Vacância (%):", value=0.0, min_value=0.0, step=0.1, format="%.2f")
+    tx_crescimento_dy = st.number_input("Taxa de crescimento esperado para os próximos 12 meses (%):",min_value=0.0, value=0.0, step=0.1, format="%.2f")
 
     if st.button("Consultar"):
         if ticker:
@@ -92,6 +92,7 @@ def main():
                     return ['background-color: #0E1117' if row.name % 2 == 0 else 'background-color: #262730'] * len(row)
 
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
+                st.caption("Últimos 12 meses")
                 st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), hide_index=True, use_container_width=True)
 
                 st.divider()
