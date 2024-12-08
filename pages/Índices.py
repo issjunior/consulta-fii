@@ -141,31 +141,6 @@ with col2:
 
 st.divider()
 
-# Layout 2 em duas colunas
-col1, col2 = st.columns(2)
-
-with col1:
-    # Exibe os títulos encontrados no investidor10 e suas porcentagens
-    media_ntnb_local, titulos_info = exibir_resultados()
-
-    if titulos_info:
-        st.title("Títulos IPCA+")
-        st.caption("Título de renda fixa emitido pelo governo brasileiro, com rendimento atrelado à inflação medida pelo IPCA (Índice de Preços ao Consumidor Amplo), que é o principal indicador da inflação no Brasil.")
-
-        # Processa os títulos encontrados
-        df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
-
-        # Exibe o DataFrame com os títulos, agora incluindo a coluna 'Soma'
-        st.dataframe(df_titulos, hide_index=True, use_container_width=True)
-        st.caption(f"Fonte: <a href='{url_investidor10}' target='_blank'>Investidor10</a>.</p>", unsafe_allow_html=True)
-    else:
-        st.write("Nenhum título IPCA+ encontrado ou ocorreu um erro.")
-
-with col2:
-    st.markdown("##### coluna 2")
-
-st.divider()
-
 # Obtém os dados da SELIC no meio do mês
 selic_formatado, selic, data_inicio_5anos, data_corte = obter_selic()
 
@@ -193,11 +168,18 @@ with col2:
         st.write("Dados da SELIC não disponíveis.")
     
 col1, col2 = st.columns(2)
-
 with col1:
     st.title("CDI")
     st.caption("Conceito de CDI.")
 
 with col2:
+    st.caption("Grágico")
+
+col1, col2 = st.columns(2)
+with col1:
     st.title("IFIX")
+    st.caption("Conceito do IFIX.")
+
+with col2:
+    st.caption("Grágico")
     
