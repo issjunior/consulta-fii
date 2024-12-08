@@ -47,33 +47,29 @@ with tab1:
     st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
 
     # Segunda linha
-    col1, col2 = st.columns(2)
-    with col1:
-        if not dados_btc.empty:
+    if not dados_btc.empty:
             dados_btc.columns = ["Fechamento", "Máximo", "Mínimo"] # renomeia colunas
             st.dataframe(dados_btc, use_container_width=True)  # datagrama
-        else:
+    else:
             st.error("Dados do Bitcoin não disponíveis para exibição.")
-    with col2:
-        st.caption("Gráfico")
 
-    # Terceira linha
-    col1, col2 = st.columns(2)
+# Terceira linha
+col1, col2 = st.columns(2)
 
-    with col1:
-    # Exibir o gráfico índice Fear & Greed no Streamlit
-        st.markdown('<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Gráfico de medo & ganância do Bitcoin" />', unsafe_allow_html=True)
+with col1:
+# Exibir o gráfico índice Fear & Greed no Streamlit
+    st.markdown('<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Gráfico de medo & ganância do Bitcoin" />', unsafe_allow_html=True)
 
-    with col2:
-        st.subheader("Índice Fear & Greed Cripto")
-        # Chama a função que retorna os valores
-        btc_fear_greed_now, btc_fear_greed_yesterday, btc_fear_greed_last_week, btc_fear_greed_last_month = alternative()
+with col2:
+    st.subheader("Índice Fear & Greed Cripto")
+    # Chama a função que retorna os valores
+    btc_fear_greed_now, btc_fear_greed_yesterday, btc_fear_greed_last_week, btc_fear_greed_last_month = alternative()
 
-        st.metric(label="Hoje", value=btc_fear_greed_now)
-        st.metric(label="Ontem", value=btc_fear_greed_yesterday)
-        st.metric(label="Última semana", value=btc_fear_greed_last_week)
-        st.metric(label="Último mês", value=btc_fear_greed_last_month)
-        st.caption("Fonte: <a href='https://alternative.me/crypto/' target='_blank'>alternative.me</a>.", unsafe_allow_html=True)
+    st.metric(label="Hoje", value=btc_fear_greed_now)
+    st.metric(label="Ontem", value=btc_fear_greed_yesterday)
+    st.metric(label="Última semana", value=btc_fear_greed_last_week)
+    st.metric(label="Último mês", value=btc_fear_greed_last_month)
+    st.caption("Fonte: <a href='https://alternative.me/crypto/' target='_blank'>alternative.me</a>.", unsafe_allow_html=True)
 
 
 st.divider()
