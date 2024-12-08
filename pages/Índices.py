@@ -23,6 +23,7 @@ def obter_ipca():
             raise ValueError("Nenhum dado foi retornado para o IPCA.")
     except Exception as erro_busca_ipca:
         st.warning("Não foi possível obter os dados do IPCA (5 anos). Verifique sua conexão ou tente novamente mais tarde.")
+        st.warning("Consulte o link: https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries código: 13522")
         st.error(f"Código do erro: {erro_busca_ipca}")
         return None, None, None, None  # Retorna valores default em caso de erro
 
