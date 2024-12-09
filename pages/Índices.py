@@ -2,6 +2,7 @@ from config import *
 from modulos.scraping_ntnb import *
 from modulos.selic import *
 from modulos.ipca import *
+from modulos.cdi import *
 import streamlit as st
 
 # Configuração do layout do Streamlit
@@ -73,10 +74,31 @@ with tab2:
             st.write("Dados da SELIC não disponíveis.")
 
 with tab3:   
+    
     col1, col2 = st.columns(2)
+    
     with col1:
+
+        # Obtém os dados da SELIC
+        cdi_formatado, cdi, data_inicio_5anos, data_corte = obter_cdi()
+
         st.title("CDI")
-        st.caption("Conceito de CDI.")
+        st.caption("Certificado de Depósito Interbancário, um título de curto prazo emitido por bancos para regularizar o fluxo de caixa entre eles.")
+        # Função para exibir os dados do CDI
+        def exibir_cdi():
+            # Chama a função para obter os dados do CDI
+            cdi_5anos = obter_cdi()
+            
+            if cdi_5anos is not None:
+                # Exibe o DataFrame usando Streamlit de forma interativa
+                st.dataframe(cdi_5anos)  # Exibe o DataFrame de forma interativa no Streamlit
+            else:
+                st.warning("Não foi possível obter os dados do CDI.")
+
+        # Chama a função para exibir os dados do CDI
+        st.dataframe(cdi_formatado, height=245, use_container_width=True)
+       
+
 
     with col2:
         st.caption("Gráfico")
