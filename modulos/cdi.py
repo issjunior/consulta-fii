@@ -35,6 +35,7 @@ def obter_cdi():
 
     return cdi_filtrado, cdi_5anos, data_inicio_5anos, data_corte
 
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def criar_grafico_cdi(cdi_filtrado, data_inicio_12meses, data_corte):
     fig = go.Figure()
     fig.add_trace(
