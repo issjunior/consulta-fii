@@ -100,12 +100,17 @@ with tab3:
         st.dataframe(cdi_filtrado_formatado, height=245, use_container_width=True)
 
     with col2:
+
         st.caption("Gráfico")
-        if not cdi_5anos.empty:
-            fig = criar_grafico_cdi(cdi_5anos, data_inicio_5anos, data_corte)
+        if not cdi_filtrado_formatado.empty:
+            # Define o início do intervalo como 12 meses atrás
+            data_inicio_12meses = data_corte - pd.DateOffset(years=1)
+
+            # Cria o gráfico com os dados filtrados
+            fig = criar_grafico_cdi(cdi_filtrado_formatado, data_inicio_12meses, data_corte)
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.write("Dados do IPCA não disponíveis.")
+            st.write("Dados do CDI não disponíveis.")
 
 with tab4:
     col1, col2 = st.columns(2)

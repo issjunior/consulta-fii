@@ -35,27 +35,21 @@ def obter_cdi():
 
     return cdi_filtrado, cdi_5anos, data_inicio_5anos, data_corte
 
-def criar_grafico_cdi(cdi_5anos, data_inicio_5anos, data_corte):
-    # Define o início do intervalo como 12 meses atrás
-    data_inicio_12meses = data_corte - pd.DateOffset(years=1)
-
-    # Filtra os dados para os últimos 5 anos
-    cdi_filtrado_5anos = cdi_5anos.loc[data_inicio_5anos:data_corte]
-
+def criar_grafico_cdi(cdi_filtrado, data_inicio_12meses, data_corte):
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=cdi_filtrado_5anos.index,
-            y=cdi_filtrado_5anos.values.flatten(),  # Transforma em vetor simples
+            x=cdi_filtrado.index,
+            y=cdi_filtrado.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
-            name="CDI (5 anos)",
+            name="CDI (Filtrado)",
             hovertemplate="<b>Data:</b> %{x}<br><b>CDI:</b> %{y:.2f} %<extra></extra>",
         )
     )
     
     # Ajustes no layout do gráfico
     fig.update_layout(
-        title="Histórico de CDI (Últimos 5 anos)",
+        title="Histórico de CDI (Apenas valores válidos)",
         xaxis_title="Período",
         yaxis_title="CDI (%)",
         xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)
