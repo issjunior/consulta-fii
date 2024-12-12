@@ -97,8 +97,6 @@ with tab3:
 
         # Chama a função para exibir os dados do CDI
         st.dataframe(cdi_formatado, height=245, use_container_width=True)
-       
-
 
     with col2:
         st.caption("Gráfico")

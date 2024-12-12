@@ -2,6 +2,7 @@ import streamlit as st
 from bcb import sgs
 import pandas as pd
 
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def obter_cdi():
     try:
         # Obtém os dados da SELIC acumulada nos últimos 5 anos
@@ -24,6 +25,9 @@ def obter_cdi():
 
     # Garante que o índice seja datetime
     cdi_filtrado.index = pd.to_datetime(cdi_filtrado.index)
+
+    # Remove valores consecutivos iguais e NaN
+    cdi_filtrado = cdi_filtrado[cdi_filtrado.diff().fillna(1) != 0].dropna()
 
     # Inverte a ordem do DataFrame para que as datas mais recentes fiquem em cima
     cdi_filtrado = cdi_filtrado.iloc[::-1]
