@@ -53,6 +53,10 @@ with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
+
+        #selic_filtrado_formatado, selic, data_inicio_5anos, data_corte = obter_selic()
+        selic_filtrado_formatado, selic_5anos, data_inicio_5anos, data_corte = obter_selic()
+
         st.title("SELIC")
         st.caption("Sistema Especial de Liquidação e de Custódia é a taxa básica de juros da economia brasileira, usada como referência para outras taxas de juros e definida pelo Banco Central.")
 
@@ -66,10 +70,13 @@ with tab2:
 
     with col2:
         # Exibe o gráfico da SELIC no meio do mês
-        if selic is not None and not selic.empty:
-            # Passa todos os argumentos necessários para criar o gráfico
-            fig_selic_meio_mes = criar_grafico_selic(selic, data_inicio_5anos, data_corte)
-            st.plotly_chart(fig_selic_meio_mes, use_container_width=True)
+        if selic_filtrado_formatado is not None and not selic_filtrado_formatado.empty:
+            # Define o início do intervalo como 12 meses atrás
+            data_inicio_12meses = data_corte - pd.DateOffset(years=1)
+
+            # Cria o gráfico com os dados filtrados
+            fig_selic = criar_grafico_selic(selic_filtrado_formatado, data_inicio_12meses, data_corte)
+            st.plotly_chart(fig_selic, use_container_width=True)
         else:
             st.write("Dados da SELIC não disponíveis.")
 
@@ -107,8 +114,8 @@ with tab3:
             data_inicio_12meses = data_corte - pd.DateOffset(years=1)
 
             # Cria o gráfico com os dados filtrados
-            fig = criar_grafico_cdi(cdi_filtrado_formatado, data_inicio_12meses, data_corte)
-            st.plotly_chart(fig, use_container_width=True)
+            fig_cdi = criar_grafico_cdi(cdi_filtrado_formatado, data_inicio_12meses, data_corte)
+            st.plotly_chart(fig_cdi, use_container_width=True)
         else:
             st.write("Dados do CDI não disponíveis.")
 
