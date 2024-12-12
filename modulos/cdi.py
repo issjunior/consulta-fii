@@ -1,14 +1,15 @@
 import streamlit as st
 from bcb import sgs
 import pandas as pd
+import plotly.graph_objects as go
 
-@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
+#@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def obter_cdi():
     try:
         # Obtém os dados da SELIC acumulada nos últimos 5 anos
         cdi_5anos = sgs.get(4389)  # Código '4389' para a SELIC no SGS do Banco Central
         if cdi_5anos is None or cdi_5anos.empty:  # Verifica se a resposta é inválida
-            raise ValueError("Nenhum dado foi retornado para a CDI.")
+            raise ValueError("Nenhum dado foi retornado para o CDI.")
     except Exception as erro_busca_cdi:
         st.warning("Não foi possível obter os dados do CDI (5 anos). Verifique sua conexão ou tente novamente mais tarde.")
         st.error(f"Código do erro: {erro_busca_cdi}")
@@ -33,3 +34,32 @@ def obter_cdi():
     cdi_filtrado = cdi_filtrado.iloc[::-1]
 
     return cdi_filtrado, cdi_5anos, data_inicio_5anos, data_corte
+
+def criar_grafico_cdi(cdi_5anos, data_inicio_5anos, data_corte):
+    # Define o início do intervalo como 12 meses atrás
+    data_inicio_12meses = data_corte - pd.DateOffset(years=1)
+
+    # Filtra os dados para os últimos 5 anos
+    cdi_filtrado_5anos = cdi_5anos.loc[data_inicio_5anos:data_corte]
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=cdi_filtrado_5anos.index,
+            y=cdi_filtrado_5anos.values.flatten(),  # Transforma em vetor simples
+            mode='markers+lines',
+            name="CDI (5 anos)",
+            hovertemplate="<b>Data:</b> %{x}<br><b>CDI:</b> %{y:.2f} %<extra></extra>",
+        )
+    )
+    
+    # Ajustes no layout do gráfico
+    fig.update_layout(
+        title="Histórico de CDI (Últimos 5 anos)",
+        xaxis_title="Período",
+        yaxis_title="CDI (%)",
+        xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)
+        xaxis_range=[data_inicio_12meses, data_corte],  # Mostra os últimos 12 meses inicialmente
+    )
+    
+    return fig

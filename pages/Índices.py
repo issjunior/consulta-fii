@@ -37,7 +37,7 @@ with tab1:
     # Coluna 2: Exibe o gráfico do IPCA
     with col2:
         if not ipca_5anos.empty:
-            fig = criar_grafico(ipca_5anos, data_inicio_5anos, data_corte)
+            fig = criar_grafico_ipca(ipca_5anos, data_inicio_5anos, data_corte)
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.write("Dados do IPCA não disponíveis.")
@@ -80,7 +80,8 @@ with tab3:
     with col1:
 
         # Obtém os dados da SELIC
-        cdi_formatado, cdi, data_inicio_5anos, data_corte = obter_cdi()
+        #cdi_formatado, cdi, data_inicio_5anos, data_corte = obter_cdi()
+        cdi_filtrado_formatado, cdi_5anos, data_inicio_5anos, data_corte = obter_cdi()
 
         st.title("CDI")
         st.caption("Certificado de Depósito Interbancário, um título de curto prazo emitido por bancos para regularizar o fluxo de caixa entre eles.")
@@ -96,10 +97,15 @@ with tab3:
                 st.warning("Não foi possível obter os dados do CDI.")
 
         # Chama a função para exibir os dados do CDI
-        st.dataframe(cdi_formatado, height=245, use_container_width=True)
+        st.dataframe(cdi_filtrado_formatado, height=245, use_container_width=True)
 
     with col2:
         st.caption("Gráfico")
+        if not cdi_5anos.empty:
+            fig = criar_grafico_cdi(cdi_5anos, data_inicio_5anos, data_corte)
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.write("Dados do IPCA não disponíveis.")
 
 with tab4:
     col1, col2 = st.columns(2)

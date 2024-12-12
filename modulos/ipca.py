@@ -40,7 +40,7 @@ def obter_ipca():
 
 # Função para criar o gráfico
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
-def criar_grafico(ipca_5anos, data_inicio_5anos, data_corte):
+def criar_grafico_ipca(ipca_5anos, data_inicio_5anos, data_corte):
     # Define o início do intervalo como 12 meses atrás
     data_inicio_12meses = data_corte - pd.DateOffset(years=1)
 
