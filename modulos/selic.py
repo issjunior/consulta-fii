@@ -43,6 +43,7 @@ def obter_selic():
 
     return selic_filtrado_formatado, selic_5anos, data_inicio_5anos, data_corte
 
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 # Função para criar o gráfico da SELIC
 def criar_grafico_selic(selic_filtrado, data_inicio_12meses, data_corte):
     fig = go.Figure()
@@ -51,14 +52,14 @@ def criar_grafico_selic(selic_filtrado, data_inicio_12meses, data_corte):
             x=selic_filtrado.index,
             y=selic_filtrado.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
-            name="Taxa SELIC (Filtrada)",
+            name="Taxa SELIC",
             hovertemplate="<b>Data:</b> %{x}<br><b>SELIC:</b> %{y:.2f} %<extra></extra>",
         )
     )
 
     # Ajustes no layout do gráfico
     fig.update_layout(
-        title="Histórico da SELIC (Apenas valores válidos)",
+        title="Histórico da SELIC",
         xaxis_title="Período",
         yaxis_title="SELIC (%)",
         xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)

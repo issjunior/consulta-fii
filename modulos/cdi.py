@@ -43,14 +43,14 @@ def criar_grafico_cdi(cdi_filtrado, data_inicio_12meses, data_corte):
             x=cdi_filtrado.index,
             y=cdi_filtrado.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
-            name="CDI (Filtrado)",
+            name="CDI",
             hovertemplate="<b>Data:</b> %{x}<br><b>CDI:</b> %{y:.2f} %<extra></extra>",
         )
     )
     
     # Ajustes no layout do gráfico
     fig.update_layout(
-        title="Histórico de CDI (Apenas valores válidos)",
+        title="Histórico de CDI",
         xaxis_title="Período",
         yaxis_title="CDI (%)",
         xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)
