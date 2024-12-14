@@ -33,15 +33,19 @@ def obter_cdi():
     # Inverte a ordem do DataFrame para que as datas mais recentes fiquem em cima
     cdi_filtrado = cdi_filtrado.iloc[::-1]
 
+    # Converte os valores para formato numérico e adiciona o símbolo de '%'
+    cdi_filtrado_formatado = cdi_filtrado.apply(pd.to_numeric, errors='coerce')
+    cdi_filtrado_formatado = cdi_filtrado_formatado.map(lambda x: f"{x:.2f} %" if isinstance(x, (int, float)) else x)
+
     return cdi_filtrado, cdi_5anos, data_inicio_5anos, data_corte
 
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
-def criar_grafico_cdi(cdi_filtrado, data_inicio_12meses, data_corte):
+def criar_grafico_cdi(cdi_filtrado_formatado, data_inicio_12meses, data_corte):
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=cdi_filtrado.index,
-            y=cdi_filtrado.values.flatten(),  # Transforma em vetor simples
+            x=cdi_filtrado_formatado.index,
+            y=cdi_filtrado_formatado.values.flatten(),  # Transforma em vetor simples
             mode='markers+lines',
             name="CDI",
             hovertemplate="<b>Data:</b> %{x}<br><b>CDI:</b> %{y:.2f} %<extra></extra>",

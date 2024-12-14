@@ -75,8 +75,8 @@ with tab2:
             data_inicio_12meses = data_corte - pd.DateOffset(years=1)
 
             # Cria o gráfico com os dados filtrados
-            fig_cdi = criar_grafico_cdi(selic_filtrado_formatado, data_inicio_12meses, data_corte)
-            st.plotly_chart(fig_cdi, use_container_width=True)
+            fig_selic = criar_grafico_selic(selic_filtrado_formatado, data_inicio_12meses, data_corte)
+            st.plotly_chart(fig_selic, use_container_width=True)
         else:
             st.write("Dados do CDI não disponíveis.")
 
