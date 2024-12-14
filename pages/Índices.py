@@ -98,12 +98,13 @@ with tab3:
             
             if cdi_5anos is not None:
                 # Exibe o DataFrame usando Streamlit de forma interativa
-                st.dataframe(cdi_5anos)  # Exibe o DataFrame de forma interativa no Streamlit
+                st.dataframe(cdi_5anos)
             else:
                 st.warning("Não foi possível obter os dados do CDI.")
 
         # Chama a função para exibir os dados do CDI
         st.dataframe(cdi_filtrado_formatado, height=245, use_container_width=True)
+        st.caption(f"Fonte: Banco Central do Brasil <a href='https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries' target='_blank'>(SGS)</a>.</p>", unsafe_allow_html=True)
 
     with col2:
 
