@@ -78,7 +78,7 @@ with tab2:
             fig_selic = criar_grafico_selic(selic_filtrado_formatado, data_inicio_12meses, data_corte)
             st.plotly_chart(fig_selic, use_container_width=True)
         else:
-            st.write("Dados do CDI não disponíveis.")
+            st.write("Dados da taxa SELIC não disponíveis.")
 
 with tab3:   
     
@@ -87,7 +87,6 @@ with tab3:
     with col1:
 
         # Obtém os dados da SELIC
-        #cdi_formatado, cdi, data_inicio_5anos, data_corte = obter_cdi()
         cdi_filtrado_formatado, cdi_5anos, data_inicio_5anos, data_corte = obter_cdi()
 
         st.title("CDI")

@@ -3,7 +3,7 @@ from bcb import sgs
 import pandas as pd
 import plotly.graph_objects as go
 
-#@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
+@st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def obter_cdi():
     try:
         # Obtém os dados da SELIC acumulada nos últimos 5 anos
@@ -33,9 +33,11 @@ def obter_cdi():
     # Inverte a ordem do DataFrame para que as datas mais recentes fiquem em cima
     cdi_filtrado = cdi_filtrado.iloc[::-1]
 
-    # Converte os valores para formato numérico e adiciona o símbolo de '%'
-    cdi_filtrado_formatado = cdi_filtrado.apply(pd.to_numeric, errors='coerce')
-    cdi_filtrado_formatado = cdi_filtrado_formatado.map(lambda x: f"{x:.2f} %" if isinstance(x, (int, float)) else x)
+    # Formata os valores da coluna 4389 diretamente com o símbolo de porcentagem
+    cdi_filtrado["4389"] = cdi_filtrado["4389"].apply(lambda x: f"{x:.2f}%")
+
+    # Renomeia a coluna "4389" para "Código SGS CDI 4389"
+    cdi_filtrado.rename(columns={"4389": "Código SGS CDI - 4389"}, inplace=True)
 
     return cdi_filtrado, cdi_5anos, data_inicio_5anos, data_corte
 
