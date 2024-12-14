@@ -69,16 +69,16 @@ with tab2:
             st.write("Dados da SELIC não disponíveis.")
 
     with col2:
-        # Exibe o gráfico da SELIC no meio do mês
-        if selic_filtrado_formatado is not None and not selic_filtrado_formatado.empty:
+        st.caption("Gráfico")
+        if not selic_filtrado_formatado.empty:
             # Define o início do intervalo como 12 meses atrás
             data_inicio_12meses = data_corte - pd.DateOffset(years=1)
 
             # Cria o gráfico com os dados filtrados
-            fig_selic = criar_grafico_selic(selic_filtrado_formatado, data_inicio_12meses, data_corte)
-            st.plotly_chart(fig_selic, use_container_width=True)
+            fig_cdi = criar_grafico_cdi(selic_filtrado_formatado, data_inicio_12meses, data_corte)
+            st.plotly_chart(fig_cdi, use_container_width=True)
         else:
-            st.write("Dados da SELIC não disponíveis.")
+            st.write("Dados do CDI não disponíveis.")
 
 with tab3:   
     
