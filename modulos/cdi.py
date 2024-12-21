@@ -56,7 +56,7 @@ def criar_grafico_cdi(cdi_filtrado_formatado, data_inicio_12meses, data_corte):
     
     # Ajustes no layout do gráfico
     fig.update_layout(
-        title="Histórico de CDI",
+        title="Histórico de CDI (últimos 5 anos)",
         xaxis_title="Período",
         yaxis_title="CDI (%)",
         xaxis_rangeslider_visible=True,  # Controle de zoom (range slider)

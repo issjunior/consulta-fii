@@ -69,7 +69,7 @@ with tab2:
             st.write("Dados da SELIC não disponíveis.")
 
     with col2:
-        st.caption("Gráfico")
+        # Gráfico
         if not selic_filtrado_formatado.empty:
             # Define o início do intervalo como 12 meses atrás
             data_inicio_12meses = data_corte - pd.DateOffset(years=1)
@@ -108,7 +108,7 @@ with tab3:
 
     with col2:
 
-        st.caption("Gráfico")
+        # Gráfico
         if not cdi_filtrado_formatado.empty:
             # Define o início do intervalo como 12 meses atrás
             data_inicio_12meses = data_corte - pd.DateOffset(years=1)
@@ -123,7 +123,7 @@ with tab4:
     col1, col2 = st.columns(2)
     with col1:
         st.title("IFIX")
-        st.caption("Conceito do IFIX.")
+        st.caption("Indicador que mede a performance média dos fundos imobiliários (FIIs) listados na Bolsa de Valores brasileira (B3). Ele é composto por uma carteira teórica de fundos imobiliários selecionados com base em critérios como liquidez e representatividade no mercado.")
 
     with col2:
         st.caption("Gráfico")
