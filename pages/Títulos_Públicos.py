@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from pages.Índices import *
 
-# Configuração do layout
+# Configuração do layout (deve ser chamada primeiro)
 st.set_page_config(
     page_title="Sis. de Investimento",
     page_icon="📊",
@@ -20,7 +20,7 @@ if titulos_info:
     df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
 
     # Define uma função de estilo para destacar o maior valor da coluna 'Soma'
-    def highlight_max(data, color="gray"):  # define a cor da celula
+    def highlight_max(data, color="gray"):  # define a cor da célula
         """
         Destaca o maior valor na coluna 'Soma'.
         """
