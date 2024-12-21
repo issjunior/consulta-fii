@@ -68,11 +68,11 @@ for ticker in tickers:
     # Adicionar informações ao DataFrame
     resumo = pd.DataFrame({
         "Ticker": [ticker.replace(".SA", "")],
-        "Valor": real(ultimo_valor_corrente) if ultimo_valor_corrente is not None else "N/A",
-        "Maior Valor": real(maior_valor),
-        "Menor Valor": real(menor_valor),
+        "Preço atual": real(ultimo_valor_corrente) if ultimo_valor_corrente is not None else "N/A",
+        "+ Preço": real(maior_valor),
+        "- Preço": real(menor_valor),
         "Diferença (R$)": real(diferenca_valores),
-        "Diferença Percentual (%)": porcentagem(diferenca_percentual)
+        "Diferença (%)": porcentagem(diferenca_percentual)
     })
     dataframes.append(resumo)
 
