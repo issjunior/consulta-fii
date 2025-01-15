@@ -94,12 +94,11 @@ def main():
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
 
                 # Informações de destaque FII
-                col1, col2 = st.columns(2)
-                
+                col1, col2 = st.columns(2)               
                 delta_preco = preco_teto - preco_atual
 
                 with col1:
-                    st.metric(label="Preço Atual", value=real(preco_atual), delta=real(delta_preco), delta_color="inverse")
+                    st.metric(label="Preço Atual", value=real(preco_atual), delta=real(delta_preco), delta_color="normal")
 
                 with col2:
                     st.metric(label="Preço Teto", value=real(preco_teto))
