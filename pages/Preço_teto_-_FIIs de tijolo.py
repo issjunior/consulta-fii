@@ -57,7 +57,7 @@ def main():
                 valor_cotas_magicnumber = calcular_valor_cotas_para_magicnumber(cotas_necessarias, preco_atual)
                 valor_cap_rate = calcular_cap_rate_ajustado(media_dividendos, vacancia, preco_atual)
                 valor_obter_pvp = obter_pvp(ticker)
-                
+
                 resultados = {
                     "Indicador": [
                         "Fundo",
@@ -92,8 +92,21 @@ def main():
                     return ['background-color: #0E1117' if row.name % 2 == 0 else 'background-color: #262730'] * len(row)
 
                 st.subheader(f"Resultados para {ticker.replace('.SA', '')}")
-                st.caption("Últimos 12 meses")
+
+                # Informações de destaque FII
+                col1, col2 = st.columns(2)
+                
+                delta_preco = preco_teto - preco_atual
+
+                with col1:
+                    st.metric(label="Preço Atual", value=real(preco_atual), delta=real(delta_preco), delta_color="inverse")
+
+                with col2:
+                    st.metric(label="Preço Teto", value=real(preco_teto))
+
                 st.dataframe(df_resultados.style.apply(colorir_linhas, axis=1), hide_index=True, use_container_width=True)
+
+                st.caption("Últimos 12 meses")
 
                 st.divider()
 
