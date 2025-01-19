@@ -34,7 +34,7 @@ with st.expander("Entenda o cálculo"):
 st.divider()
 
 def main():
-    st.header("Cálculo de preço teto para FIIs")
+    st.header("Cálculo de preço teto para FIIs de Tijolo")
     ticker = st.text_input("Ticker do FII:", "").upper() + ".SA"
     spread = st.number_input("Spread (prêmio) do FII:", value=2.5, min_value=0.0, step=0.1, format="%.2f")
     vacancia = st.number_input("Vacância (%):", value=0.0, min_value=0.0, step=0.1, format="%.2f")
