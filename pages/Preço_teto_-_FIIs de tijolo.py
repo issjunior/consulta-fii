@@ -60,7 +60,7 @@ def main():
 
                 resultados = {
                     "Indicador": [
-                        "Fundo",
+                        "Gestora",
                         "Ticker",
                         "Cotação Atual",
                         "Variação da Cota",
