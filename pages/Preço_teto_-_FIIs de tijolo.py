@@ -65,7 +65,7 @@ def main():
                         "Cotação Atual",
                         "Variação da Cota",
                         "Média de Dividendos",
-                        "Dividendos Recebidos",
+                        "Dividendos Recebidos (últimos 12 meses)",
                         "Preço Teto",
                         "Magic Number",
                         "Valor para Magic Number",
