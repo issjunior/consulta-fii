@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide",
 )
 
-tab1, tab2, tab3 = st.tabs(["📈 BTC", "📈 FII 1", "📈 FII 2"])
+tab1, tab2, tab3 = st.tabs(["📈 BTC", "📈 Dólar", "📈 FII 1"])
 
 with tab1:
 
@@ -75,7 +75,37 @@ with tab1:
 st.divider()
 
 with tab2:
-    st.title("Ativo 1")
+    
+    # Ticker do dólar em relação ao real
+    ticker = "USDBRL=X"
+
+    # Obtendo os dados históricos do dólar
+    dolar = yf.Ticker(ticker)
+    dados_dolar = dolar.history(period="2y")  # Período de 2 anos
+
+    # Ocultando as colunas desnecessárias
+    colunas_para_exibir = ["Open", "High", "Low", "Close"]
+    dados_filtrados = dados_dolar[colunas_para_exibir]
+
+    # Ordenando as datas em ordem decrescente (mais recentes primeiro)
+    dados_filtrados = dados_filtrados.sort_index(ascending=False)
+
+    # Formatando os valores no padrão de moeda brasileira
+    dados_filtrados_formatados = dados_filtrados.copy()
+    for coluna in dados_filtrados_formatados.columns:
+        dados_filtrados_formatados[coluna] = dados_filtrados_formatados[coluna].map(
+            lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        )
+
+    # Exibindo a tabela de dados
+    st.write("### Dados Históricos do Dólar (USD/BRL)")
+    st.dataframe(dados_filtrados_formatados)
+
+    # Plotando o gráfico da cotação
+    st.write("### Gráfico da Cotação do Dólar nos Últimos 2 Anos")
+    st.line_chart(dados_filtrados["Close"])
+
+    st.caption("Cotação do Dólar Americano nos Últimos 2 Anos")
 
 with tab3:
     st.title("Ativo 2")
