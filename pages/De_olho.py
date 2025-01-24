@@ -23,6 +23,7 @@ with tab1:
     # Métricas BTC
     if not dados_btc.empty:
         st.subheader("Métricas do Bitcoin")
+
         col1, col2, col3, col4 = st.columns(4)
         
         # Obtém os valores e converte para float para as métricas
@@ -98,11 +99,14 @@ with tab2:
         )
 
     # Exibindo a tabela de dados
-    st.write("### Dados Históricos do Dólar (USD/BRL)")
+    # Adiciona informações sobre o período dos dados
+    st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
+
+    st.subheader("Dados Históricos do Dólar (USD/BRL)")
     st.dataframe(dados_filtrados_formatados)
 
     # Plotando o gráfico da cotação
-    st.write("### Gráfico da Cotação do Dólar nos Últimos 2 Anos")
+    st.subheader("Histórico de cotação do Dólar")
     st.line_chart(dados_filtrados["Close"])
 
     st.caption("Cotação do Dólar Americano nos Últimos 2 Anos")
