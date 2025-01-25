@@ -103,11 +103,13 @@ with tab2:
     for coluna in dados_filtrados_formatados.columns:
         dados_filtrados_formatados[coluna] = dados_filtrados_formatados[coluna].map(formatar_moeda)
 
+    # Formatando o índice como data no formato brasileiro
+    dados_filtrados_formatados.index = dados_filtrados_formatados.index.strftime('%d/%m/%Y')
+
     # Exibindo a tabela de dados formatados
     st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
     st.subheader("Dados Históricos do Dólar (USD/BRL)")
-    #st.table(dados_filtrados_formatados)
-    st.dataframe(dados_filtrados_formatados)
+    st.dataframe(dados_filtrados_formatados, use_container_width=True)
 
     # Plotando o gráfico da cotação com Plotly
     st.subheader("Histórico de cotação do Dólar")
@@ -123,11 +125,11 @@ with tab2:
         title="Cotação do Dólar Americano nos Últimos 2 Anos",
         xaxis_title="Data",
         yaxis_title="Cotação (R$)",
-        #template="plotly_white",
         xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
         xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
     )
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 with tab3:
