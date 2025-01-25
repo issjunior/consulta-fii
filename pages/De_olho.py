@@ -107,12 +107,13 @@ with tab2:
     dados_filtrados_formatados.index = dados_filtrados_formatados.index.strftime('%d/%m/%Y')
 
     # Exibindo a tabela de dados formatados
-    st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
     st.subheader("Dados Históricos do Dólar (USD/BRL)")
+    st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
     st.dataframe(dados_filtrados_formatados, use_container_width=True)
 
     # Plotando o gráfico da cotação com Plotly
     st.subheader("Histórico de cotação do Dólar")
+    st.caption("Cotação do Dólar Americano nos Últimos 2 Anos")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=dados_filtrados.index,
@@ -122,7 +123,7 @@ with tab2:
         hovertemplate="<b>Data:</b> %{x}<br><b>Valor Cota:</b> R$ %{y:.2f}<extra></extra>"
     ))
     fig.update_layout(
-        title="Cotação do Dólar Americano nos Últimos 2 Anos",
+        #title="Cotação do Dólar Americano nos Últimos 2 Anos",
         xaxis_title="Data",
         yaxis_title="Cotação (R$)",
         xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
