@@ -1,9 +1,9 @@
 import yfinance as yf
-import pandas as pd
 import streamlit as st
 from config import *
 from modulos.scraping_fear_greed_btc import *
 from modulos.btc import *
+import plotly.graph_objects as go
 
 # Configuração do layout do Streamlit
 st.set_page_config(
@@ -75,8 +75,8 @@ with tab1:
 
 st.divider()
 
+# Cotação dólar
 with tab2:
-    
     # Ticker do dólar em relação ao real
     ticker = "USDBRL=X"
 
@@ -91,25 +91,44 @@ with tab2:
     # Ordenando as datas em ordem decrescente (mais recentes primeiro)
     dados_filtrados = dados_filtrados.sort_index(ascending=False)
 
+    # Calculando as datas do período
+    data_inicio = dados_dolar.index.min()
+    data_corte = dados_dolar.index.max()
+
     # Formatando os valores no padrão de moeda brasileira
+    def formatar_moeda(valor):
+        return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
     dados_filtrados_formatados = dados_filtrados.copy()
     for coluna in dados_filtrados_formatados.columns:
-        dados_filtrados_formatados[coluna] = dados_filtrados_formatados[coluna].map(
-            lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        )
+        dados_filtrados_formatados[coluna] = dados_filtrados_formatados[coluna].map(formatar_moeda)
 
-    # Exibindo a tabela de dados
-    # Adiciona informações sobre o período dos dados
+    # Exibindo a tabela de dados formatados
     st.caption(f"Dados do período: {data_inicio.strftime('%d/%m/%Y')} até {data_corte.strftime('%d/%m/%Y')} (últimos 2 anos)")
-
     st.subheader("Dados Históricos do Dólar (USD/BRL)")
+    #st.table(dados_filtrados_formatados)
     st.dataframe(dados_filtrados_formatados)
 
-    # Plotando o gráfico da cotação
+    # Plotando o gráfico da cotação com Plotly
     st.subheader("Histórico de cotação do Dólar")
-    st.line_chart(dados_filtrados["Close"])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=dados_filtrados.index,
+        y=dados_filtrados["Close"],
+        mode="lines",
+        name="Fechamento",
+        hovertemplate="<b>Data:</b> %{x}<br><b>Valor Cota:</b> R$ %{y:.2f}<extra></extra>"
+    ))
+    fig.update_layout(
+        title="Cotação do Dólar Americano nos Últimos 2 Anos",
+        xaxis_title="Data",
+        yaxis_title="Cotação (R$)",
+        #template="plotly_white",
+        xaxis_rangeslider_visible=True,  # Habilita o controle de zoom (range slider)
+        xaxis_range=[data_corte - pd.DateOffset(years=1), data_corte]  # Limita a visualização para 1 ano
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
-    st.caption("Cotação do Dólar Americano nos Últimos 2 Anos")
 
 with tab3:
     st.title("Ativo 2")
