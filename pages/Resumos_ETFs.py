@@ -70,7 +70,7 @@ for ticker in tickers:
         "Preço atual": dolar(ultimo_valor_corrente) if ultimo_valor_corrente is not None else "N/A",
         "+ Preço": dolar(maior_valor),
         "- Preço": dolar(menor_valor),
-        "Diferença (U$)": dolar(diferenca_valores),
+        "Diferença (US$)": dolar(diferenca_valores),
         "Diferença (%)": porcentagem(diferenca_percentual)
     })
     dataframes.append(resumo)
