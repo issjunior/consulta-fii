@@ -1,0 +1,9 @@
+1. Informações para teto de preço fii tijolo
+    -scraping
+    -- CAP Rate (calculado) OK
+    -- Incluir P/VP (investidor10.com.br) OK
+    -- FFO Yield - fudamentus.com.br
+
+2. Fazer cálculo de FII de papel
+
+3. Incluir o medidor de medo ou ganancia parao BTC OK
