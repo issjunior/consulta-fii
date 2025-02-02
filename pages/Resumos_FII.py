@@ -15,7 +15,7 @@ st.title("Resumo de FIIs")
 st.caption("Considerando o período de 2 anos")
 
 # Lista de tickers para análise
-tickers = ["HGLG11.SA", "TRXF11.SA", "XPML11.SA", "MALL11.SA", "JSRE11.SA", "HGRU11.SA"]
+tickers = ["GARE11.SA", "HFOF11.SA", "HGLG11.SA", "HGRU11.SA", "HSLG11.SA", "HSML11.SA", "JSRE11.SA", "KNCR11.SA", "KNSC11.SA", "MALL11.SA", "RZAK11.SA", "RZTR11.SA", "TRXF11.SA", "TVRI11.SA", "XPML11.SA", "XPSF11.SA"]
 
 # Data de início e fim para buscar os dados
 data_fim = datetime.today()
