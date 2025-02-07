@@ -68,8 +68,8 @@ for ticker in tickers:
     resumo = pd.DataFrame({
         "Ticker": [ticker.replace(".SA", "")],
         "Preço atual": dolar(ultimo_valor_corrente) if ultimo_valor_corrente is not None else "N/A",
-        "+ Preço": dolar(maior_valor),
         "- Preço": dolar(menor_valor),
+        "+ Preço": dolar(maior_valor),
         "Diferença (US$)": dolar(diferenca_valores),
         "Diferença (%)": porcentagem(diferenca_percentual)
     })
