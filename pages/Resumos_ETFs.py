@@ -15,7 +15,7 @@ st.title("Resumo de ETFs")
 st.caption("Considerando o período de 2 anos")
 
 # Lista de tickers para análise
-tickers = ["VOO"] # Tickers
+tickers = ["VOO"]  # Tickers
 
 # Data de início e fim para buscar os dados
 data_fim = datetime.today()
@@ -24,8 +24,8 @@ data_inicio = data_fim - timedelta(days=365 * 2)
 # Função para buscar dados e processar
 @st.cache_data
 def fetch_ticker_data(ticker):
-    # Obter os dados do ticker
-    df = yf.download(ticker, start=data_inicio, end=data_fim)
+    # Note que auto_adjust=False para garantir que 'Adj Close' exista
+    df = yf.download(ticker, start=data_inicio, end=data_fim, auto_adjust=False)
     df["Ticker"] = ticker
     df.reset_index(inplace=True)
     return df
@@ -45,7 +45,7 @@ for ticker in tickers:
     
     # Obter o valor corrente do ticker (último preço de mercado)
     ticker_info = yf.Ticker(ticker)
-    ticker_history = ticker_info.history(period="1d")
+    ticker_history = ticker_info.history(period="1d", auto_adjust=False)  # Também aqui manter False
     
     # Verificar se 'Adj Close' está presente ou usar 'Close'
     if 'Adj Close' in ticker_history.columns:
