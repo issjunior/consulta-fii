@@ -1,0 +1,4 @@
+# Arquivos para não serem versionados 
+preco_teto/__pycache__/
+*.psy
+*.pyc
