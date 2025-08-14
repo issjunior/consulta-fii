@@ -1,4 +1,5 @@
 # Arquivos para não serem versionados 
-preco_teto/__pycache__/
+__pycache__
 *.psy
 *.pyc
+consulta-fii.code-workspace
