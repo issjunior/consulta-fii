@@ -15,7 +15,7 @@ st.title("Resumo de FIIs")
 st.caption("Considerando o período de 12 meses")
 
 # Lista de tickers para análise
-tickers = ["GARE11.SA", "HFOF11.SA", "HGLG11.SA", "HGRU11.SA", "HSLG11.SA", "HSML11.SA", "JSRE11.SA", "KNCR11.SA", "KNSC11.SA", "MALL11.SA", "RZAK11.SA", "RZTR11.SA", "TRXF11.SA", "TVRI11.SA", "XPML11.SA", "XPSF11.SA"]
+tickers = ["GARE11.SA", "HFOF11.SA", "HGLG11.SA", "HGRU11.SA", "HSLG11.SA", "HSML11.SA", "JSRE11.SA", "KNCR11.SA", "KNSC11.SA", "PMLL11.SA", "RZAK11.SA", "RZTR11.SA", "TRXF11.SA", "TVRI11.SA", "XPML11.SA", "XPSF11.SA"]
 
 # Data de início e fim para buscar os dados
 data_fim = datetime.today()
@@ -32,8 +32,14 @@ def fetch_ticker_data(ticker):
     return df
 
 def process_ticker_data(df):
-    # Fechamento ajustado, maior e menor valores
-    adj_close = df["Adj Close"]
+    # Usa 'Adj Close' se existir, caso contrário usa 'Close'
+    if "Adj Close" in df.columns:
+        adj_close = df["Adj Close"]
+    elif "Close" in df.columns:
+        adj_close = df["Close"]
+    else:
+        raise ValueError("O DataFrame não possui colunas 'Adj Close' ou 'Close'")
+    
     menor_valor = float(adj_close.min().item())
     maior_valor = float(adj_close.max().item())
     return adj_close, menor_valor, maior_valor
