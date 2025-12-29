@@ -15,7 +15,7 @@ st.title("Resumo de ETFs")
 st.caption("Considerando o período de 2 anos")
 
 # Lista de tickers para análise
-tickers = ["VOO"]  # Tickers
+tickers = ["VOO", "DIVD11.SA"]  # Tickers
 
 # Data de início e fim para buscar os dados
 data_fim = datetime.today()
