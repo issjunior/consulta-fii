@@ -1,6 +1,8 @@
 import streamlit as st
 import yfinance as yf
 
+from modulos.scraping_acoes import *
+
 # Configuração do layout
 st.set_page_config(
     page_title="Sis. de Investimento",
@@ -20,4 +22,14 @@ with st.expander("Entenda o cálculo"):
 
 st.divider()
 
-st.header("Parâmetros de entrada")
+st.header("Parâmetros de Fundamentalistas")
+
+ticker = st.text_input("Ticker da Ação:", "").upper()
+
+if st.button("Buscar Dados"):
+    dados = obter_dados_acao(ticker)
+    if dados:
+        st.write("Dados obtidos:")
+        st.json(dados)
+    else:
+        st.error("Não foi possível obter os dados para o ticker informado.")
