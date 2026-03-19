@@ -1,5 +1,5 @@
 import streamlit as st
-from modulos.scraping_acoes import obter_dados_acao
+from modulos.scraping_acoes import *
 
 # Configuração do layout
 st.set_page_config(
@@ -60,6 +60,7 @@ if buscar:
             st.divider()
 
             # Segmento em destaque
+            st.title(f"{dados['Ticker']}")
             st.metric(
                 label="📈 Segmento",
                 value=dados['Segmento'] or "Informação não disponível"
@@ -98,8 +99,9 @@ if buscar:
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA"],
                 "Valor": [
+                    dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
                     dados['Tag Along'] or "N/A",
                     dados['Free Float'] or "N/A",

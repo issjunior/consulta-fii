@@ -19,6 +19,7 @@ def obter_dados_acao(ticker):
         soup = BeautifulSoup(response.text, 'html.parser')
 
         dados = {
+            "Ticker": ticker,
             "Segmento": None,
             "Tag Along": None,
             "Free Float": None,
