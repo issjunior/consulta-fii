@@ -33,3 +33,4 @@ if st.button("Buscar Dados"):
         st.json(dados)
     else:
         st.error("Não foi possível obter os dados para o ticker informado.")
+
