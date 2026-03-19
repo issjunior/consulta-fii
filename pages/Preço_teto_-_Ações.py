@@ -50,8 +50,8 @@ if buscar:
         with st.spinner(f"Buscando dados de {ticker}..."):
             dados = obter_dados_acao(ticker)
 
-        if "erro" in dados:
-            st.error(dados["erro"])
+        if dados is None:
+            st.error(f"❌ Não foi possível obter dados para {ticker}")
         else:
             st.success(f"✅ Dados carregados com sucesso")
             st.caption(
@@ -59,28 +59,53 @@ if buscar:
             )
             st.divider()
 
-            # Exibição dos dados
+            # Segmento em destaque
+            st.metric(
+                label="📈 Segmento",
+                value=dados['Segmento'] or "Informação não disponível"
+            )
+
+            st.divider()
+
+            # Grid 2x2 para restante das informações: Tag Along, Free Float, PAYOUT, LPA
             col1, col2 = st.columns(2)
 
             with col1:
-                st.subheader("📈 Segmento")
-                st.write(dados['Segmento'] or "N/A")
+                with st.container(border=True):
+                    st.subheader("🏷️ Tag Along")
+                    st.write(dados['Tag Along'] or "Informação não disponível")
 
             with col2:
-                st.subheader("🏷️ Tag Along")
-                st.write(dados['Tag Along'] or "N/A")
+                with st.container(border=True):
+                    st.subheader("🔄 Free Float")
+                    st.write(dados['Free Float'] or "Informação não disponível")
 
             col3, col4 = st.columns(2)
 
             with col3:
-                st.subheader("🔄 Free Float")
-                st.write(dados['Free Float'] or "N/A")
+                with st.container(border=True):
+                    st.subheader("📊 PAYOUT")
+                    st.write(dados['PAYOUT'] or "Informação não disponível")
 
             with col4:
-                st.subheader("📊 PAYOUT")
-                st.write(dados['PAYOUT'] or "N/A")
+                with st.container(border=True):
+                    st.subheader("💰 LPA")
+                    st.write(f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
 
-            st.metric(
-                "💰 LPA (Lucro por Ação)",
-                f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A"
-            )
+            st.divider()
+
+            # Tabela resumida
+            st.subheader("📋 Resumo Completo")
+
+            df_resumo = {
+                "Métrica": ["Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA"],
+                "Valor": [
+                    dados['Segmento'] or "N/A",
+                    dados['Tag Along'] or "N/A",
+                    dados['Free Float'] or "N/A",
+                    dados['PAYOUT'] or "N/A",
+                    f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A"
+                ]
+            }
+
+            st.dataframe(df_resumo, use_container_width=True, hide_index=True)
