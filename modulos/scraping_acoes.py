@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import streamlit as st
 import re
 
-@st.cache_data(ttl=10800)
 def obter_dados_acao(ticker):
     url = f"https://investidor10.com.br/acoes/{ticker}"
 
@@ -15,12 +13,10 @@ def obter_dados_acao(ticker):
     }
 
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, 'html.parser')
-
-        st.write(f"Fonte: {url}")
 
         dados = {
             "Segmento": None,
@@ -41,14 +37,14 @@ def obter_dados_acao(ticker):
             except ValueError:
                 return None
 
-        # Captura informações gerais (Segmento, Tag Along, Free Float)
+        # Captura informações gerais
         for celula in soup.find_all('div', class_='cell'):
             texto = celula.get_text(strip=True)
             for chave in ["Segmento", "Tag Along", "Free Float"]:
                 if chave.lower() in texto.lower():
                     dados[chave] = texto.replace(chave, '').strip()
 
-        # Captura o PAYOUT
+        # Captura PAYOUT
         node = soup.find(text=re.compile(r'PAYOUT', re.I))
         if node:
             parent = node.parent
@@ -58,7 +54,7 @@ def obter_dados_acao(ticker):
             if m:
                 dados["PAYOUT"] = m.group(1)
 
-        # Captura o LPA
+        # Captura LPA
         label_text = soup.find(text=re.compile(r'\bLPA\b', re.I))
         lpa_value = None
 
@@ -94,8 +90,6 @@ def obter_dados_acao(ticker):
         return dados
 
     except requests.exceptions.RequestException as e:
-        st.error(f"Erro ao acessar a página: {e}")
-        return None
+        return {"erro": f"Erro ao acessar a página: {e}"}
     except Exception as e:
-        st.error(f"Erro ao processar a página: {e}")
-        return None
+        return {"erro": f"Erro ao processar a página: {e}"}
