@@ -61,34 +61,34 @@ if buscar:
 
             # Segmento em destaque
             st.title(f"{dados['Ticker']}")
-            st.metric(
-                label="📈 Segmento",
-                value=dados['Segmento'] or "Informação não disponível"
-            )
 
             st.divider()
 
-            # Grid 2x2 para restante das informações: Tag Along, Free Float, PAYOUT, LPA
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
 
             with col1:
+                with st.container(border=True):
+                    st.subheader("📂 Segmento")
+                    st.write(dados['Segmento'] or "Informação não disponível")
+
+            with col2:
                 with st.container(border=True):
                     st.subheader("🏷️ Tag Along")
                     st.write(dados['Tag Along'] or "Informação não disponível")
 
-            with col2:
+            with col3:
                 with st.container(border=True):
                     st.subheader("🔄 Free Float")
                     st.write(dados['Free Float'] or "Informação não disponível")
 
-            col3, col4 = st.columns(2)
+            col4, col5, col6 = st.columns(3)
 
-            with col3:
+            with col4:
                 with st.container(border=True):
                     st.subheader("📊 PAYOUT")
                     st.write(dados['PAYOUT'] or "Informação não disponível")
 
-            with col4:
+            with col5:
                 with st.container(border=True):
                     st.subheader("💰 LPA")
                     st.write(f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
