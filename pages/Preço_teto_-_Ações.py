@@ -98,13 +98,42 @@ if buscar:
                     st.subheader("📈 VPA")
                     st.write(f"{dados['VPA']:.2f}" if dados.get('VPA') else "Informação não disponível")
 
+            # Cálculo do preço teto pelo método Graham
+            Graham_const = 22.5
+            lpa = dados.get('LPA')
+            vpa = dados.get('VPA')
+            preco_teto = None
+            if lpa and vpa and lpa > 0 and vpa > 0:
+                preco_teto = (Graham_const * lpa * vpa) ** 0.5
+
+            preco_atual = dados.get('PrecoAtual')
+
+            # Exibir lado a lado: Preço Teto e Preço Atual
+            col7, col8 = st.columns(2)
+
+            with col7:
+                with st.container(border=True):
+                    st.subheader("💹 Preço Atual")
+                    if preco_atual:
+                        st.write(f"R$ {preco_atual:.2f}")
+                    else:
+                        st.write("Informação não disponível")
+
+            with col8:
+                with st.container(border=True):
+                    st.subheader("🏁 Preço Teto (Graham)")
+                    if preco_teto:
+                        st.write(f"R$ {preco_teto:.2f}")
+                    else:
+                        st.write("Informação não disponível")
+
             st.divider()
 
             # Tabela resumida
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)"],
                 "Valor": [
                     dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
@@ -112,7 +141,9 @@ if buscar:
                     dados['Free Float'] or "N/A",
                     dados['PAYOUT'] or "N/A",
                     f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A",
-                    f"R$ {dados['VPA']:.2f}" if dados.get('VPA') else "N/A"
+                    f"R$ {dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
+                    f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
+                    f"R$ {preco_teto:.2f}" if preco_teto else "N/A"
                 ]
             }
 

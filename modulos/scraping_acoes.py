@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import yfinance as yf
 
 def obter_dados_acao(ticker):
     url = f"https://investidor10.com.br/acoes/{ticker}"
@@ -26,6 +27,7 @@ def obter_dados_acao(ticker):
             "PAYOUT": None,
             "LPA": None,
             "VPA": None,
+            "PrecoAtual": None,
         }
 
         def extract_numeric_value(text):
@@ -121,6 +123,20 @@ def obter_dados_acao(ticker):
 
         if vpa_value:
             dados["VPA"] = extract_numeric_value(vpa_value)
+
+        # Captura preço atual via yfinance (B3 ticker com .SA)
+        try:
+            ticker_yf = ticker if ticker.upper().endswith('.SA') else f"{ticker}.SA"
+            acao = yf.Ticker(ticker_yf)
+            preco = acao.info.get('regularMarketPrice') or acao.info.get('currentPrice')
+            if preco is None:
+                historico = acao.history(period='1d')
+                if not historico.empty:
+                    preco = float(historico['Close'][-1])
+            if isinstance(preco, (int, float)):
+                dados['PrecoAtual'] = float(preco)
+        except Exception:
+            dados['PrecoAtual'] = None
 
         return dados
 
