@@ -25,6 +25,7 @@ def obter_dados_acao(ticker):
             "Free Float": None,
             "PAYOUT": None,
             "LPA": None,
+            "VPA": None,
         }
 
         def extract_numeric_value(text):
@@ -87,6 +88,39 @@ def obter_dados_acao(ticker):
 
         if lpa_value:
             dados["LPA"] = extract_numeric_value(lpa_value)
+
+        # Captura VPA
+        vpa_label = soup.find(text=re.compile(r'\bVPA\b', re.I))
+        vpa_value = None
+
+        if vpa_label:
+            parent = vpa_label.parent
+            text_parent = parent.get_text(" ", strip=True)
+            m = re.search(r'VPA[^0-9\-:,]*([0-9\.,]+)', text_parent, re.I)
+            if m:
+                vpa_value = m.group(1)
+            else:
+                next_num = parent.find_next(string=re.compile(r'[0-9]{1,3}[.,][0-9]{1,3}'))
+                if next_num:
+                    vpa_value = next_num.strip()
+
+        if not vpa_value:
+            for td in soup.find_all(['td', 'th']):
+                if td.get_text(strip=True).upper() == 'VPA':
+                    sib = td.find_next_sibling(['td', 'th'])
+                    if sib:
+                        v = re.search(r'([0-9\.,]+)', sib.get_text())
+                        if v:
+                            vpa_value = v.group(1)
+                            break
+
+        if not vpa_value:
+            fallback = soup.find(string=re.compile(r'\d+,\d{1,3}'))
+            if fallback:
+                vpa_value = re.search(r'([0-9\.,]+)', fallback).group(1)
+
+        if vpa_value:
+            dados["VPA"] = extract_numeric_value(vpa_value)
 
         return dados
 

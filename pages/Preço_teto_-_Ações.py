@@ -91,7 +91,12 @@ if buscar:
             with col5:
                 with st.container(border=True):
                     st.subheader("💰 LPA")
-                    st.write(f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
+                    st.write(f"{dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
+
+            with col6:
+                with st.container(border=True):
+                    st.subheader("📈 VPA")
+                    st.write(f"{dados['VPA']:.2f}" if dados.get('VPA') else "Informação não disponível")
 
             st.divider()
 
@@ -99,14 +104,15 @@ if buscar:
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA"],
                 "Valor": [
                     dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
                     dados['Tag Along'] or "N/A",
                     dados['Free Float'] or "N/A",
                     dados['PAYOUT'] or "N/A",
-                    f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A"
+                    f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A",
+                    f"R$ {dados['VPA']:.2f}" if dados.get('VPA') else "N/A"
                 ]
             }
 
