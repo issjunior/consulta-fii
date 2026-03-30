@@ -108,8 +108,15 @@ if buscar:
 
             preco_atual = dados.get('PrecoAtual')
 
-            # Exibir lado a lado: Preço Teto e Preço Atual
-            col7, col8 = st.columns(2)
+            # cálculo de diferença percentual e absoluta (Atual x Teto)
+            diferenca_pct = None
+            diferenca_abs = None
+            if preco_atual and preco_teto and preco_teto > 0:
+                diferenca_pct = ((preco_atual - preco_teto) / preco_teto) * 100
+                diferenca_abs = preco_atual - preco_teto
+
+            # Exibir lado a lado: Preço Teto, Preço Atual e Diferença
+            col7, col8, col9 = st.columns(3)
 
             with col7:
                 with st.container(border=True):
@@ -124,8 +131,33 @@ if buscar:
                     st.subheader("🏁 Preço Teto (Graham)")
                     if preco_teto:
                         st.write(f"R$ {preco_teto:.2f}")
+                        if diferenca_pct is not None and diferenca_abs is not None:
+                            sinal = '+' if diferenca_pct >= 0 else ''
+                            st.caption(f"Diferença: {sinal}{diferenca_pct:.2f}% (R${diferenca_abs:+.2f})")
+                        elif diferenca_pct is not None:
+                            sinal = '+' if diferenca_pct >= 0 else ''
+                            st.caption(f"Diferença: {sinal}{diferenca_pct:.2f}%")
+                        else:
+                            st.caption("Diferença: Não disponível")
                     else:
                         st.write("Informação não disponível")
+
+            with col9:
+                with st.container(border=True):
+                    if diferenca_pct is not None and diferenca_abs is not None:
+                        st.metric(
+                            "Diferença %",
+                            f"{diferenca_pct:+.2f}%",
+                            delta=f"R$ {diferenca_abs:+.2f}"
+                        )
+                    elif diferenca_pct is not None:
+                        st.metric(
+                            "Diferença %",
+                            f"{diferenca_pct:+.2f}%",
+                            delta="R$ 0.00"
+                        )
+                    else:
+                        st.write("Diferença não disponível")
 
             st.divider()
 
@@ -133,7 +165,7 @@ if buscar:
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
                 "Valor": [
                     dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
@@ -143,7 +175,9 @@ if buscar:
                     f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
                     f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
                     f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
-                    f"R$ {preco_teto:.2f}" if preco_teto else "N/A"
+                    f"R$ {preco_teto:.2f}" if preco_teto else "N/A",
+                    f"{diferenca_pct:+.2f}%" if diferenca_pct is not None else "N/A",
+                    f"R$ {diferenca_abs:+.2f}" if diferenca_abs is not None else "N/A"
                 ]
             }
 
