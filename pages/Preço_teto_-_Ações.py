@@ -28,7 +28,7 @@ with st.expander("ℹ️ Entenda o Método Graham"):
 st.divider()
 
 # Seção de busca
-st.header("🔍 Buscar Fundamentalista")
+st.header("🔍 Buscar")
 
 col_input, col_button = st.columns([4, 1])
 
@@ -60,8 +60,9 @@ if buscar:
             st.divider()
 
             # Segmento em destaque
-            st.title(f"{dados['Ticker']}")
-
+            st.title(f"Ticker {dados['Ticker']}")
+            st.subheader(f"📂 Segmento: {dados['Segmento'] or 'Informação não disponível'}")
+            
             st.divider()
 
             col1, col2, col3 = st.columns(3)
@@ -131,14 +132,6 @@ if buscar:
                     st.subheader("🏁 Preço Teto (Graham)")
                     if preco_teto:
                         st.write(f"R$ {preco_teto:.2f}")
-                        if diferenca_pct is not None and diferenca_abs is not None:
-                            sinal = '+' if diferenca_pct >= 0 else ''
-                            st.caption(f"Diferença: {sinal}{diferenca_pct:.2f}% (R${diferenca_abs:+.2f})")
-                        elif diferenca_pct is not None:
-                            sinal = '+' if diferenca_pct >= 0 else ''
-                            st.caption(f"Diferença: {sinal}{diferenca_pct:.2f}%")
-                        else:
-                            st.caption("Diferença: Não disponível")
                     else:
                         st.write("Informação não disponível")
 
@@ -146,7 +139,7 @@ if buscar:
                 with st.container(border=True):
                     if diferenca_pct is not None and diferenca_abs is not None:
                         st.metric(
-                            "Diferença %",
+                            "Diferença (Preço Atual vs Preço Teto)",
                             f"{diferenca_pct:+.2f}%",
                             delta=f"R$ {diferenca_abs:+.2f}"
                         )
