@@ -140,8 +140,8 @@ if buscar:
                     dados['Tag Along'] or "N/A",
                     dados['Free Float'] or "N/A",
                     dados['PAYOUT'] or "N/A",
-                    f"R$ {dados['LPA']:.2f}" if dados['LPA'] else "N/A",
-                    f"R$ {dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
+                    f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
+                    f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
                     f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
                     f"R$ {preco_teto:.2f}" if preco_teto else "N/A"
                 ]
