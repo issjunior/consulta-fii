@@ -82,7 +82,7 @@ if buscar:
                     st.subheader("🔄 Free Float")
                     st.write(dados['Free Float'] or "Informação não disponível")
 
-            col4, col5, col6 = st.columns(3)
+            col4, col5, col6, col7 = st.columns(4)
 
             with col4:
                 with st.container(border=True):
@@ -98,6 +98,11 @@ if buscar:
                 with st.container(border=True):
                     st.subheader("📈 VPA")
                     st.write(f"{dados['VPA']:.2f}" if dados.get('VPA') else "Informação não disponível")
+
+            with col7:
+                with st.container(border=True):
+                    st.subheader("📊 ROE")
+                    st.write(dados['ROE'] or "Informação não disponível")
 
             # Cálculo do preço teto pelo método Graham
             Graham_const = 22.5
@@ -117,9 +122,9 @@ if buscar:
                 diferenca_abs = preco_atual - preco_teto
 
             # Exibir lado a lado: Preço Teto, Preço Atual e Diferença
-            col7, col8, col9 = st.columns(3)
+            col8, col9, col10 = st.columns(3)
 
-            with col7:
+            with col8:
                 with st.container(border=True):
                     st.subheader("💹 Preço Atual")
                     if preco_atual:
@@ -127,7 +132,7 @@ if buscar:
                     else:
                         st.write("Informação não disponível")
 
-            with col8:
+            with col9:
                 with st.container(border=True):
                     st.subheader("🏁 Preço Teto (Graham)")
                     if preco_teto:
@@ -135,7 +140,7 @@ if buscar:
                     else:
                         st.write("Informação não disponível")
 
-            with col9:
+            with col10:
                 with st.container(border=True):
                     if diferenca_pct is not None and diferenca_abs is not None:
                         st.metric(
@@ -158,13 +163,14 @@ if buscar:
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "ROE", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
                 "Valor": [
                     dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
                     dados['Tag Along'] or "N/A",
                     dados['Free Float'] or "N/A",
                     dados['PAYOUT'] or "N/A",
+                    dados['ROE'] or "N/A",
                     f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
                     f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
                     f"R$ {preco_atual:.2f}" if preco_atual else "N/A",

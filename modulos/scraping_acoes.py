@@ -25,6 +25,7 @@ def obter_dados_acao(ticker):
             "Tag Along": None,
             "Free Float": None,
             "PAYOUT": None,
+            "ROE": None,
             "LPA": None,
             "VPA": None,
             "PrecoAtual": None,
@@ -57,6 +58,26 @@ def obter_dados_acao(ticker):
                 m = re.search(r'([\d.,]+%)', parent.find_next_sibling().get_text())
             if m:
                 dados["PAYOUT"] = m.group(1)
+
+        # Captura ROE
+        label = soup.find(text=re.compile(r'\bROE\b', re.I))
+        roe_str = None
+        if label:
+            # procurar valor com % próximo ao label (no próprio elemento pai ou em elementos próximos)
+            parent_text = label.parent.get_text(" ", strip=True)
+            m = re.search(r'(\d{1,3}[.,]\d{1,2})\s*%', parent_text)
+            if m:
+                roe_str = m.group(1) + '%'
+            else:
+                # Check next sibling
+                next_sib = label.parent.find_next_sibling()
+                if next_sib:
+                    sib_text = next_sib.get_text(" ", strip=True)
+                    m = re.search(r'(\d{1,3}[.,]\d{1,2})\s*%', sib_text)
+                    if m:
+                        roe_str = m.group(1) + '%'
+        if roe_str:
+            dados["ROE"] = roe_str
 
         # Captura LPA
         label_text = soup.find(text=re.compile(r'\bLPA\b', re.I))
