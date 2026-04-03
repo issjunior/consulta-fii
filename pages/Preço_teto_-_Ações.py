@@ -1,5 +1,6 @@
 import streamlit as st
 from modulos.scraping_acoes import *
+import plotly.graph_objects as go
 
 # Configuração do layout
 st.set_page_config(
@@ -164,29 +165,148 @@ if buscar:
                     else:
                         st.write("Diferença não disponível")
 
-            st.divider()
+# ================================================================
+# GRÁFICO DE HISTÓRICO DE PREÇO (12 MESES)
+# ================================================================
 
-            # Tabela resumida
-            st.subheader("📋 Resumo Completo")
+        st.divider()
+        st.subheader("📈 Histórico de Preço (12 meses)")
 
-            df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "ROE", "Dívida Líquida / Ebitda", "ROIC", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
-                "Valor": [
-                    dados['Ticker'] or "N/A",
-                    dados['Segmento'] or "N/A",
-                    dados['Tag Along'] or "N/A",
-                    dados['Free Float'] or "N/A",
-                    dados['PAYOUT'] or "N/A",
-                    dados['ROE'] or "N/A",
-                    dados['Dívida Líquida / Ebitda'] or "N/A",
-                    dados['ROIC'] or "N/A",
-                    f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
-                    f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
-                    f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
-                    f"R$ {preco_teto:.2f}" if preco_teto else "N/A",
-                    f"{diferenca_pct:+.2f}%" if diferenca_pct is not None else "N/A",
-                    f"R$ {diferenca_abs:+.2f}" if diferenca_abs is not None else "N/A"
-                ]
-            }
+        try:
+            historico = obter_historico_preco(ticker)
 
-            st.dataframe(df_resumo, use_container_width=True, hide_index=True)
+            if historico is not None and not historico.empty:
+                # Criar figura com Plotly Graph Objects
+                fig = go.Figure()
+
+                # Adicionar linha de preço de fechamento
+                fig.add_trace(go.Scatter(
+                    x=historico.index,
+                    y=historico['Close'],
+                    mode='lines',
+                    name='Preço de Fechamento',
+                    line=dict(color='#00D9FF', width=2.5),
+                    fill='tozeroy',
+                    fillcolor='rgba(0, 217, 255, 0.15)'
+                ))
+
+                # Calcular limites do eixo Y com margem dinâmica
+                preco_min = historico['Close'].min()
+                preco_max = historico['Close'].max()
+                amplitude = preco_max - preco_min
+
+                # Margem de 15% acima e abaixo
+                margem = amplitude * 0.15
+                y_min = preco_min - margem
+                y_max = preco_max + margem
+
+                # Adicionar linha de preço teto (Graham) se disponível
+                if preco_teto:
+                    fig.add_hline(
+                        y=preco_teto,
+                        line_dash="dash",
+                        line_color="#00FF41",
+                        annotation_text=f"Preço Teto (Graham): R$ {preco_teto:.2f}",
+                        annotation_position="right",
+                        annotation_font=dict(size=11, color="#00FF41")
+                    )
+                    # Ajustar limite superior se preço teto for maior
+                    if preco_teto > y_max:
+                        y_max = preco_teto + (amplitude * 0.1)
+
+                # Adicionar linha de preço atual
+                if preco_atual:
+                    fig.add_hline(
+                        y=preco_atual,
+                        line_dash="dash",
+                        line_color="#FF6B6B",
+                        annotation_text=f"Preço Atual: R$ {preco_atual:.2f}",
+                        annotation_position="right",
+                        annotation_font=dict(size=11, color="#FF6B6B")
+                    )
+
+                # Configurar layout com limites ajustados
+                fig.update_layout(
+#                   title=f'Histórico de Preço - {ticker} (Últimos 12 meses)',
+                    xaxis_title='Data',
+                    yaxis_title='Preço (R$)',
+                    hovermode='x unified',
+                    template='plotly_dark',
+                    height=700,
+                    margin=dict(b=150),
+                    plot_bgcolor='rgba(17, 17, 17, 0.5)',
+                    paper_bgcolor='rgba(0, 0, 0, 0)',
+                    xaxis=dict(
+                        rangeslider=dict(visible=False),
+                        type='date',
+                        gridcolor='rgba(255, 255, 255, 0.1)',
+                        showgrid=True
+                    ),
+                    yaxis=dict(
+                        gridcolor='rgba(255, 255, 255, 0.1)',
+                        range=[y_min, y_max],
+                        automargin=True,
+                        showgrid=True
+                    ),
+                    font=dict(size=12, color='#FFFFFF'),
+                    legend=dict(
+                        orientation="h",
+                        yanchor="bottom",
+                        y=-0.25,
+                        xanchor="center",
+                        x=0.5,
+                        bgcolor="rgba(30, 30, 30, 0.9)",
+                        bordercolor="rgba(255, 255, 255, 0.2)",
+                        borderwidth=1,
+                        font=dict(color='#FFFFFF')
+                    )
+                )
+
+                # Adicionar anotação explicativa abaixo do gráfico
+                fig.add_annotation(
+                    text="<b>Linhas de Referência:</b> " +
+                         "<span style='color:#00FF41'>━━ Verde (tracejada):</span> Preço Teto (Método Graham) | " +
+                         "<span style='color:#FF6B6B'>━━ Vermelho (tracejada):</span> Preço Atual do Mercado",
+                    xref="paper", yref="paper",
+                    x=0.5, y=-0.20,
+                    showarrow=False,
+                    bgcolor="rgba(30, 30, 30, 0.95)",
+                    bordercolor="rgba(255, 255, 255, 0.2)",
+                    borderwidth=1,
+                    font=dict(size=10, color='#FFFFFF'),
+                    align="center",
+                    xanchor="center"
+                )
+
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.warning("⚠️ Não foi possível obter histórico de preços para este ticker")
+
+        except Exception as e:
+            st.error(f"❌ Erro ao carregar gráfico: {e}")
+        except Exception as e:
+            st.error(f"❌ Erro ao carregar gráfico: {e}")
+        # Tabela resumida
+        st.subheader("📋 Resumo Completo")
+
+        df_resumo = {
+            "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "ROE", "Dívida Líquida / Ebitda", "ROIC", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
+            "Valor": [
+                dados['Ticker'] or "N/A",
+                dados['Segmento'] or "N/A",
+                dados['Tag Along'] or "N/A",
+                dados['Free Float'] or "N/A",
+                dados['PAYOUT'] or "N/A",
+                dados['ROE'] or "N/A",
+                dados['Dívida Líquida / Ebitda'] or "N/A",
+                dados['ROIC'] or "N/A",
+                f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
+                f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
+                f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
+                f"R$ {preco_teto:.2f}" if preco_teto else "N/A",
+                f"{diferenca_pct:+.2f}%" if diferenca_pct is not None else "N/A",
+                f"R$ {diferenca_abs:+.2f}" if diferenca_abs is not None else "N/A"
+            ]
+        }
+
+        st.dataframe(df_resumo, use_container_width=True, hide_index=True)

@@ -3,6 +3,21 @@ from bs4 import BeautifulSoup
 import re
 import yfinance as yf
 
+"""Obtém histórico de preço da ação para plotar gráfico."""
+def obter_historico_preco(ticker, periodo='1y'):
+    try:
+        ticker_yf = ticker if ticker.upper().endswith('.SA') else f"{ticker}.SA"
+        acao = yf.Ticker(ticker_yf)
+        historico = acao.history(period=periodo)
+
+        if historico.empty:
+            return None
+
+        return historico
+    except Exception as e:
+        print(f"Erro ao obter histórico: {e}")
+        return None
+
 def obter_dados_acao(ticker):
     url = f"https://investidor10.com.br/acoes/{ticker}"
 
