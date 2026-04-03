@@ -27,6 +27,7 @@ def obter_dados_acao(ticker):
             "PAYOUT": None,
             "ROE": None,
             "Dívida Líquida / Ebitda": None,
+            "ROIC": None,
             "LPA": None,
             "VPA": None,
             "PrecoAtual": None,
@@ -97,6 +98,24 @@ def obter_dados_acao(ticker):
                         divida_str = m.group(1)
         if divida_str:
             dados["Dívida Líquida / Ebitda"] = divida_str
+
+        # Captura ROIC
+        label = soup.find(text=re.compile(r'\bROIC\b', re.I))
+        roic_str = None
+        if label:
+            parent_text = label.parent.get_text(" ", strip=True)
+            m = re.search(r'(\d{1,3}[.,]\d{1,2})\s*%', parent_text)
+            if m:
+                roic_str = m.group(1) + '%'
+            else:
+                next_sib = label.parent.find_next_sibling()
+                if next_sib:
+                    sib_text = next_sib.get_text(" ", strip=True)
+                    m = re.search(r'(\d{1,3}[.,]\d{1,2})\s*%', sib_text)
+                    if m:
+                        roic_str = m.group(1) + '%'
+        if roic_str:
+            dados["ROIC"] = roic_str
 
         # Captura LPA
         label_text = soup.find(text=re.compile(r'\bLPA\b', re.I))

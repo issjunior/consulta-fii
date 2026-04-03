@@ -69,45 +69,47 @@ if buscar:
 
             with col1:
                 with st.container(border=True):
-                    st.subheader("📂 Segmento")
-                    st.write(dados['Segmento'] or "Informação não disponível")
-
-            with col2:
-                with st.container(border=True):
                     st.subheader("🏷️ Tag Along")
                     st.write(dados['Tag Along'] or "Informação não disponível")
 
-            with col3:
+            with col2:
                 with st.container(border=True):
                     st.subheader("🔄 Free Float")
                     st.write(dados['Free Float'] or "Informação não disponível")
 
-            col4, col5, col6, col7, col8 = st.columns(5)
-
-            with col4:
+            with col3:
                 with st.container(border=True):
                     st.subheader("📊 PAYOUT")
                     st.write(dados['PAYOUT'] or "Informação não disponível")
 
-            with col5:
-                with st.container(border=True):
-                    st.subheader("💰 LPA")
-                    st.write(f"{dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
+            col4, col5, col6 = st.columns(3)
 
-            with col6:
-                with st.container(border=True):
-                    st.subheader("📈 VPA")
-                    st.write(f"{dados['VPA']:.2f}" if dados.get('VPA') else "Informação não disponível")
-
-            with col7:
+            with col4:
                 with st.container(border=True):
                     st.subheader("📊 ROE")
                     st.write(dados['ROE'] or "Informação não disponível")
 
+            with col5:
+                with st.container(border=True):
+                    st.subheader("📊 DL / Ebitda")
+                    st.write(dados['Dívida Líquida / Ebitda'] or "Informação não disponível")
+
+            with col6:
+                with st.container(border=True):
+                    st.subheader("📊 ROIC")
+                    st.write(dados['ROIC'] or "Informação não disponível")
+
+            col7, col8 = st.columns(2)
+
+            with col7:
+                with st.container(border=True):
+                    st.subheader("💰 LPA")
+                    st.write(f"{dados['LPA']:.2f}" if dados['LPA'] else "Informação não disponível")
+
             with col8:
                 with st.container(border=True):
-                    st.subheader("📊 Dívida Líquida / Ebitda")
-                    st.write(dados['Dívida Líquida / Ebitda'] or "Informação não disponível")
+                    st.subheader("📈 VPA")
+                    st.write(f"{dados['VPA']:.2f}" if dados.get('VPA') else "Informação não disponível")
 
             # Cálculo do preço teto pelo método Graham
             Graham_const = 22.5
@@ -168,7 +170,7 @@ if buscar:
             st.subheader("📋 Resumo Completo")
 
             df_resumo = {
-                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "ROE", "Dívida Líquida / Ebitda", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
+                "Métrica": ["Ticker", "Segmento", "Tag Along", "Free Float", "PAYOUT", "ROE", "Dívida Líquida / Ebitda", "ROIC", "LPA", "VPA", "Preço Atual", "Preço Teto (Graham)", "Diferença % (Atual vs Teto)", "Diferença R$ (Atual - Teto)"],
                 "Valor": [
                     dados['Ticker'] or "N/A",
                     dados['Segmento'] or "N/A",
@@ -177,6 +179,7 @@ if buscar:
                     dados['PAYOUT'] or "N/A",
                     dados['ROE'] or "N/A",
                     dados['Dívida Líquida / Ebitda'] or "N/A",
+                    dados['ROIC'] or "N/A",
                     f"{dados['LPA']:.2f}" if dados['LPA'] else "N/A",
                     f"{dados['VPA']:.2f}" if dados.get('VPA') else "N/A",
                     f"R$ {preco_atual:.2f}" if preco_atual else "N/A",
