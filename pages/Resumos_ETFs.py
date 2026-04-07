@@ -110,7 +110,6 @@ with st.spinner("Buscando dados dos ETFs..."):
         resumo = pd.DataFrame({
             "Ticker":        [ticker.replace(".SA", "")],
             "Nome":          [info.get("longName", "N/A")],
-            "Moeda":         [simbolo_moeda(ticker)],
             "Preço Atual":   [fmt(ultimo_valor) if ultimo_valor is not None else "N/A"],
             "+ Preço (2a)":  [fmt(maior_valor)],
             "- Preço (2a)":  [fmt(menor_valor)],
