@@ -73,7 +73,7 @@ col1, col2, col3, col4 = st.columns(4, gap="medium")
 with col1:
     with st.container(border=True):
         st.metric(
-            label="₿ Bitcoin — Preço Atual",
+            label="🪙 Bitcoin — Preço Atual",
             value=dolar(btc_price) if btc_price is not None else "N/A",
         )
 

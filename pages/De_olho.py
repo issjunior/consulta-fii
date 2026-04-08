@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # Header principal
-st.title("📊 Mercado — BTC, Dólar e FIIs")
+st.title("🪙 Mercado — BTC, Dólar e FIIs")
 st.caption("Acompanhe as cotações e indicadores de mercado em tempo real.")
 
 st.divider()
