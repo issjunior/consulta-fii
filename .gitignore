@@ -1,6 +1,33 @@
-# Arquivos para não serem versionados 
-__pycache__
-*.psy
-*.pyc
-consulta-fii.code-workspace
+# Ambiente Python
+__pycache__/
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Variáveis de ambiente
+.env
+.env.local
 .streamlit/secrets.toml
+
+# IDE e editores
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs e temporários
+*.log
+*.tmp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
