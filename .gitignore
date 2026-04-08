@@ -3,4 +3,4 @@ __pycache__
 *.psy
 *.pyc
 consulta-fii.code-workspace
-.streamlit\secrets.toml
+.streamlit/secrets.toml
