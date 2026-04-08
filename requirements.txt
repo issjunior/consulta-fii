@@ -6,3 +6,4 @@ beautifulsoup4==4.12.3
 requests==2.32.3
 babel==2.16.0
 python-bcb==0.3.0
+groq
