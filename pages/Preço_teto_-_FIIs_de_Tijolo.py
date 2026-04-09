@@ -35,8 +35,9 @@ except Exception as e:
     st.error(f"❌ Erro ao configurar a IA: {e}")
 
 # ================================================================
-# 🔍 DEBUG TEMPORÁRIO — remova após resolver
+# 🔍 DEBUG TEMPORÁRIO DA API GROQ
 # ================================================================
+"""
 with st.expander("🔍 Debug da IA — clique para expandir"):
     st.write("**IA disponível:**", IA_DISPONIVEL)
     st.write("**Chave encontrada:**", "GROQ_API_KEY" in st.secrets)
@@ -44,6 +45,7 @@ with st.expander("🔍 Debug da IA — clique para expandir"):
     st.write("**Primeiros 8 caracteres:**", chave[:8] + "..." if chave else "❌ Vazia")
     st.write("**Começa com 'gsk_':**", chave.startswith("gsk_") if chave else False)
     st.write("**Tamanho da chave:**", len(chave), "caracteres")
+"""
 # ================================================================
 
 # ================================================================
