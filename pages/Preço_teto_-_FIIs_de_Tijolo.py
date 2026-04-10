@@ -23,7 +23,7 @@ st.set_page_config(
 # ================================================================
 IA_DISPONIVEL = False
 cliente_ia    = None
-MODELO_GROQ = "llama-3.3-70b-versatile"
+MODELO_GROQ   = "llama-3.3-70b-versatile"
 
 try:
     cliente_ia    = Groq(api_key=st.secrets["GROQ_API_KEY"])
@@ -33,18 +33,6 @@ except KeyError:
     st.error("❌ Chave `GROQ_API_KEY` não encontrada em `.streamlit/secrets.toml`.")
 except Exception as e:
     st.error(f"❌ Erro ao configurar a IA: {e}")
-
-# ================================================================
-# 🔍 DEBUG TEMPORÁRIO DA API GROQ
-# ================================================================
-#with st.expander("🔍 Debug da IA — clique para expandir"):
-#    st.write("**IA disponível:**", IA_DISPONIVEL)
-#    st.write("**Chave encontrada:**", "GROQ_API_KEY" in st.secrets)
-#    chave = st.secrets.get("GROQ_API_KEY", "")
-#    st.write("**Primeiros 8 caracteres:**", chave[:8] + "..." if chave else "❌ Vazia")
-#    st.write("**Começa com 'gsk_':**", chave.startswith("gsk_") if chave else False)
-#    st.write("**Tamanho da chave:**", len(chave), "caracteres")
-# ================================================================
 
 # ================================================================
 # HELPERS — IA
@@ -77,6 +65,47 @@ Tx. Crescimento   : {dados.get('tx_crescimento_dy', 'N/A')}
 
 Com base nesses dados, responda à pergunta do usuário.
 """.strip()
+
+
+def gerar_sugestoes(dados: dict) -> list:
+    """Gera 3 sugestões de perguntas contextualizadas com base nos dados do FII."""
+    try:
+        prompt = f"""
+Com base nos dados abaixo de um FII brasileiro, gere exatamente 3 sugestões de perguntas 
+relevantes e contextualizadas que um investidor faria sobre este fundo.
+
+=== DADOS DO FII ===
+Ticker      : {dados.get('ticker', 'N/A')}
+Preço Atual : {dados.get('preco_atual', 'N/A')}
+Preço Teto  : {dados.get('preco_teto', 'N/A')}
+Diferença % : {dados.get('diferenca_pct', 'N/A')}
+DY Anual    : {dados.get('media_div_pct', 'N/A')}
+P/VP        : {dados.get('valor_pvp', 'N/A')}
+Cap Rate    : {dados.get('valor_cap_rate', 'N/A')}
+Magic Number: {dados.get('cotas_necessarias', 'N/A')} cotas
+====================
+
+Retorne APENAS as 3 perguntas, uma por linha, sem numeração, sem explicações, sem bullets.
+""".strip()
+
+        resposta = cliente_ia.chat.completions.create(
+            model=MODELO_GROQ,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.6,
+            max_tokens=256,
+        )
+
+        linhas    = resposta.choices[0].message.content.strip().split("\n")
+        sugestoes = [l.strip() for l in linhas if l.strip()][:3]
+        return sugestoes
+
+    except Exception:
+        # Fallback para sugestões fixas em caso de erro
+        return [
+            "Com base nos dados, este FII está barato ou caro?",
+            "Como interpretar o Cap Rate Ajustado deste FII?",
+            "O que significa o Magic Number e como utilizá-lo?",
+        ]
 
 
 def perguntar_ia(dados: dict, historico: list, pergunta: str) -> str:
@@ -213,7 +242,7 @@ if buscar:
 
                     nome_fii = acao.info.get('longName', ticker_raw)
 
-                    # Salva dados na session_state para o chat
+                    # ── Salva dados na session_state para o chat ─────────
                     st.session_state["dados_fii"] = {
                         "ticker":                  ticker_raw,
                         "nome":                    nome_fii,
@@ -233,9 +262,11 @@ if buscar:
                         "tx_crescimento_dy":       porcentagem(tx_crescimento_dy),
                     }
 
-                    # Limpa histórico ao buscar novo ticker
-                    st.session_state["chat_historico"] = []
-                    st.session_state["chat_mensagens"] = []
+                    # ── Limpa histórico ao buscar novo ticker ────────────
+                    st.session_state["chat_historico"]  = []
+                    st.session_state["chat_mensagens"]  = []
+                    st.session_state["sugestoes_ia"]    = []
+                    st.session_state["sugestoes_ticker"] = None
 
                     st.success("✅ Dados carregados com sucesso")
                     st.divider()
@@ -481,27 +512,37 @@ if "dados_fii" in st.session_state and st.session_state["dados_fii"]:
         if "chat_historico" not in st.session_state:
             st.session_state["chat_historico"] = []
 
-        # Sugestões de perguntas rápidas
+        # ── Sugestões dinâmicas geradas pela IA ─────────────────────
         st.markdown("**💡 Sugestões de perguntas:**")
-        col_s1, col_s2, col_s3 = st.columns(3)
+
+        # Gera sugestões apenas uma vez por ticker consultado
+        if "sugestoes_ia" not in st.session_state or \
+           st.session_state.get("sugestoes_ticker") != dados_fii["ticker"]:
+            with st.spinner("💡 Gerando sugestões personalizadas..."):
+                st.session_state["sugestoes_ia"]     = gerar_sugestoes(dados_fii)
+                st.session_state["sugestoes_ticker"] = dados_fii["ticker"]
+
+        sugestoes          = st.session_state["sugestoes_ia"]
         sugestao_escolhida = None
 
-        with col_s1:
-            if st.button("📊 O FII está barato ou caro?", use_container_width=True):
-                sugestao_escolhida = "Com base nos dados fornecidos, este FII está barato ou caro? Explique o raciocínio."
-        with col_s2:
-            if st.button("💰 Como interpretar o Cap Rate?", use_container_width=True):
-                sugestao_escolhida = "Como devo interpretar o Cap Rate Ajustado deste FII? O valor está bom?"
-        with col_s3:
-            if st.button("🔢 O que significa o Magic Number?", use_container_width=True):
-                sugestao_escolhida = "Explique o que significa o Magic Number e como utilizá-lo na minha estratégia."
+        col_s1, col_s2, col_s3 = st.columns(3)
 
-        # Exibir histórico de mensagens
+        with col_s1:
+            if st.button(sugestoes[0], use_container_width=True):
+                sugestao_escolhida = sugestoes[0]
+        with col_s2:
+            if st.button(sugestoes[1], use_container_width=True):
+                sugestao_escolhida = sugestoes[1]
+        with col_s3:
+            if st.button(sugestoes[2], use_container_width=True):
+                sugestao_escolhida = sugestoes[2]
+
+        # ── Exibir histórico de mensagens ────────────────────────────
         for msg in st.session_state["chat_mensagens"]:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
 
-        # Input do usuário ou sugestão clicada
+        # ── Input do usuário ou sugestão clicada ─────────────────────
         pergunta_usuario = st.chat_input("Digite sua pergunta sobre este FII...")
         pergunta_final   = sugestao_escolhida or pergunta_usuario
 
@@ -533,6 +574,7 @@ if "dados_fii" in st.session_state and st.session_state["dados_fii"]:
                 {"role": "model", "parts": [resposta]}
             )
 
+        # ── Botão limpar conversa ────────────────────────────────────
         if st.session_state.get("chat_mensagens"):
             if st.button("🗑️ Limpar conversa", use_container_width=False):
                 st.session_state["chat_historico"] = []
