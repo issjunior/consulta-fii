@@ -151,7 +151,7 @@ col_input, col_button = st.columns([4, 1])
 with col_input:
     ticker_raw = st.text_input(
         "Ticker do FII",
-        placeholder="Ex: MXRF11, HGLG11",
+        placeholder="Ex: GARE11, HGLG11, LVBI11",
         label_visibility="collapsed"
     ).upper()
 
@@ -298,7 +298,6 @@ if buscar:
                                     "Diferença (Preço Atual vs Preço Teto)",
                                     f"{diferenca_pct:+.2f}%",
                                     delta=f"R$ {diferenca_abs:+.2f}",
-                                    delta_color="inverse"
                                 )
                             else:
                                 st.write("Diferença não disponível")
