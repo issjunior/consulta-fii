@@ -100,7 +100,6 @@ Retorne APENAS as 3 perguntas, uma por linha, sem numeração, sem explicações
         return sugestoes
 
     except Exception:
-        # Fallback para sugestões fixas em caso de erro
         return [
             "Com base nos dados, este FII está barato ou caro?",
             "Como interpretar o Cap Rate Ajustado deste FII?",
@@ -112,7 +111,6 @@ def perguntar_ia(dados: dict, historico: list, pergunta: str) -> str:
     """Envia a pergunta para o Groq mantendo o histórico da conversa."""
     try:
         contexto = montar_contexto_fii(dados)
-
         messages = [{"role": "system", "content": contexto}]
 
         for msg in historico:
@@ -133,6 +131,55 @@ def perguntar_ia(dados: dict, historico: list, pergunta: str) -> str:
 
     except Exception as e:
         return f"❌ Erro ao consultar a IA: {e}"
+
+
+# ================================================================
+# COMPONENTE — Legenda do gráfico de cotas
+# ================================================================
+def legenda_grafico_cotas():
+    """Renderiza a legenda compacta em linha única abaixo do gráfico de cotas."""
+    st.markdown("""
+        <div style="
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        ">
+            <div style="
+                flex: 1;
+                background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,107,107,0.05));
+                border-left: 4px solid #FF6B6B;
+                border-radius: 8px;
+                padding: 8px 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            ">
+                <span style="color:#FF6B6B; font-size:1.2rem; font-weight:700;">───</span>
+                <span style="color:#CCCCCC; font-size:0.82rem;">
+                    <strong style="color:#FF6B6B;">Linha Vermelha:</strong>
+                    Preço atual da cota negociado na bolsa de valores.
+                </span>
+            </div>
+            <div style="
+                flex: 1;
+                background: linear-gradient(135deg, rgba(0,255,65,0.15), rgba(0,255,65,0.05));
+                border-left: 4px solid #00FF41;
+                border-radius: 8px;
+                padding: 8px 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            ">
+                <span style="color:#00FF41; font-size:1.2rem; font-weight:700;">──</span>
+                <span style="color:#CCCCCC; font-size:0.82rem;">
+                    <strong style="color:#00FF41;">Linha Verde:</strong>
+                    Preço Teto pelo Modelo de Gordon — valor máximo considerado justo para compra.
+                </span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
 
 # ================================================================
 # HEADER
@@ -192,19 +239,36 @@ col_spread, col_vacancia, col_crescimento = st.columns(3)
 with col_spread:
     spread = st.number_input(
         "📌 Spread (prêmio) do FII:",
-        value=2.5, min_value=0.0, step=0.1, format="%.2f"
+        value=2.5, min_value=0.0, step=0.1, format="%.2f",
+        help=(
+            "É o 'prêmio de risco' que você exige a mais por investir num FII "
+            "em vez de num título seguro do governo. "
+            "Quanto maior o spread, mais conservador é o seu preço teto. "
+            "Ex: spread de 2,5% significa que você quer ganhar 2,5% a mais do que o Tesouro IPCA+."
+        )
     )
 
 with col_vacancia:
     vacancia = st.number_input(
         "🏚️ Vacância (%):",
-        value=0.0, min_value=0.0, step=0.1, format="%.2f"
+        value=0.0, min_value=0.0, step=0.1, format="%.2f",
+        help=(
+            "Percentual dos imóveis do fundo que estão desocupados (sem inquilino). "
+            "Imóveis vazios não geram aluguel, o que reduz os dividendos. "
+            "Ex: vacância de 10% significa que 10% dos imóveis estão sem inquilino."
+        )
     )
 
 with col_crescimento:
     tx_crescimento_dy = st.number_input(
         "📈 Taxa de crescimento esperado (próx. 12 meses %):",
-        min_value=0.0, value=0.0, step=0.1, format="%.2f"
+        min_value=0.0, value=0.0, step=0.1, format="%.2f",
+        help=(
+            "Quanto você espera que os dividendos do fundo cresçam nos próximos 12 meses. "
+            "Se o fundo tiver novos imóveis entrando ou contratos sendo reajustados, "
+            "os dividendos tendem a aumentar. "
+            "Deixe em 0% se não souber ou preferir ser conservador."
+        )
     )
 
 # ================================================================
@@ -263,9 +327,9 @@ if buscar:
                     }
 
                     # ── Limpa histórico ao buscar novo ticker ────────────
-                    st.session_state["chat_historico"]  = []
-                    st.session_state["chat_mensagens"]  = []
-                    st.session_state["sugestoes_ia"]    = []
+                    st.session_state["chat_historico"]   = []
+                    st.session_state["chat_mensagens"]   = []
+                    st.session_state["sugestoes_ia"]     = []
                     st.session_state["sugestoes_ticker"] = None
 
                     st.success("✅ Dados carregados com sucesso")
@@ -278,57 +342,135 @@ if buscar:
 
                     # ── Cards linha 1 ────────────────────────────────────
                     col1, col2, col3 = st.columns(3)
+
                     with col1:
                         with st.container(border=True):
-                            st.subheader("📊 P/VP")
+                            st.subheader(
+                                "📊 P/VP",
+                                help=(
+                                    "Preço sobre Valor Patrimonial. "
+                                    "Compara o preço da cota com o valor real dos imóveis do fundo. "
+                                    "P/VP abaixo de 1,0 significa que você está comprando o imóvel "
+                                    "por menos do que ele realmente vale. "
+                                    "Acima de 1,0 significa que está pagando um prêmio."
+                                )
+                            )
                             st.write(porcentagem(valor_pvp) if valor_pvp else "Não disponível")
+
                     with col2:
                         with st.container(border=True):
-                            st.subheader("📈 Cap Rate Ajustado")
+                            st.subheader(
+                                "📈 Cap Rate Ajustado",
+                                help=(
+                                    "É o rendimento anual que os imóveis do fundo geram "
+                                    "em relação ao preço atual da cota, já descontando a vacância. "
+                                    "Pense como o 'aluguel anual' dividido pelo preço do imóvel. "
+                                    "Quanto maior, melhor a rentabilidade do fundo."
+                                )
+                            )
                             st.write(porcentagem(valor_cap_rate) if valor_cap_rate else "Não disponível")
+
                     with col3:
                         with st.container(border=True):
-                            st.subheader("🔢 Magic Number")
+                            st.subheader(
+                                "🔢 Magic Number",
+                                help=(
+                                    "Quantidade de cotas necessárias para que os dividendos "
+                                    "recebidos paguem o valor de UMA cota por mês. "
+                                    "É uma forma de medir o tempo de 'recuperação' do investimento. "
+                                    "Ex: Magic Number 500 significa que com 500 cotas, "
+                                    "os dividendos mensais pagam o valor de 1 cota."
+                                )
+                            )
                             st.write(f"{cotas_necessarias} cotas" if cotas_necessarias else "Não disponível")
 
                     # ── Cards linha 2 ────────────────────────────────────
                     col4, col5, col6 = st.columns(3)
+
                     with col4:
                         with st.container(border=True):
-                            st.subheader("💰 Média de Dividendos")
+                            st.subheader(
+                                "💰 Média de Dividendos",
+                                help=(
+                                    "Valor médio pago por cota nos últimos 12 meses. "
+                                    "É o 'salário mensal' que cada cota te paga. "
+                                    "O DY anual mostra esse rendimento em percentual "
+                                    "em relação ao preço atual da cota."
+                                )
+                            )
                             if media_dividendos:
                                 st.write(f"{real(media_dividendos)} (DY anual de {porcentagem(media_div_pct)})")
                             else:
                                 st.write("Não disponível")
+
                     with col5:
                         with st.container(border=True):
-                            st.subheader("📥 Dividendos (12 meses)")
+                            st.subheader(
+                                "📥 Dividendos (12 meses)",
+                                help=(
+                                    "Soma total de dividendos pagos por cota nos últimos 12 meses. "
+                                    "Se você tivesse 100 cotas, multiplicaria esse valor por 100 "
+                                    "para saber quanto teria recebido no ano."
+                                )
+                            )
                             st.write(real(total_dividendos) if total_dividendos else "Não disponível")
+
                     with col6:
                         with st.container(border=True):
-                            st.subheader("💼 Valor p/ Magic Number")
+                            st.subheader(
+                                "💼 Valor p/ Magic Number",
+                                help=(
+                                    "Valor total em reais necessário para atingir o Magic Number. "
+                                    "É o montante que você precisaria investir neste FII para que "
+                                    "os dividendos mensais pagassem o valor de 1 cota por mês."
+                                )
+                            )
                             st.write(real(valor_cotas_magicnumber) if valor_cotas_magicnumber else "Não disponível")
 
                     # ── Cards linha 3 ────────────────────────────────────
                     col7, col8, col9 = st.columns(3)
+
                     with col7:
                         with st.container(border=True):
-                            st.subheader("💹 Preço Atual")
+                            st.subheader(
+                                "💹 Preço Atual",
+                                help=(
+                                    "Preço de mercado atual de uma cota do fundo. "
+                                    "É o valor que você pagaria hoje para comprar "
+                                    "uma cota na bolsa de valores."
+                                )
+                            )
                             st.write(real(preco_atual) if preco_atual else "Não disponível")
+
                     with col8:
                         with st.container(border=True):
-                            st.subheader("🏁 Preço Teto (Gordon)")
+                            st.subheader(
+                                "🏁 Preço Teto (Gordon)",
+                                help=(
+                                    "Preço máximo que vale a pena pagar por uma cota, "
+                                    "calculado pelo Modelo de Gordon. "
+                                    "Se o preço atual estiver abaixo deste valor, "
+                                    "o fundo pode ser uma boa oportunidade. "
+                                    "Se estiver acima, o fundo está caro para os dividendos que paga."
+                                )
+                            )
                             if preco_teto:
                                 st.write(f"{real(preco_teto)} (spread de {porcentagem(spread)})")
                             else:
                                 st.write("Não disponível")
+
                     with col9:
                         with st.container(border=True):
                             if diferenca_pct is not None and diferenca_abs is not None:
                                 st.metric(
-                                    "Diferença (Preço Atual vs Preço Teto)",
-                                    f"{diferenca_pct:+.2f}%",
+                                    label="📏 Diferença (Preço Atual vs Preço Teto)",
+                                    value=f"{diferenca_pct:+.2f}%",
                                     delta=f"R$ {diferenca_abs:+.2f}",
+                                    help=(
+                                        "Mostra o quanto o preço atual está acima ou abaixo do preço teto. "
+                                        "🟢 Valor negativo = preço atual ABAIXO do teto (possível oportunidade). "
+                                        "🔴 Valor positivo = preço atual ACIMA do teto (fundo está caro)."
+                                    )
                                 )
                             else:
                                 st.write("Diferença não disponível")
@@ -404,6 +546,10 @@ if buscar:
                                 )
                             )
                             st.plotly_chart(fig_cota, use_container_width=True)
+
+                            # ── Legenda compacta em linha única ───────────
+                            legenda_grafico_cotas()
+
                         else:
                             st.warning("⚠️ Histórico da cota não disponível.")
 
@@ -515,7 +661,6 @@ if "dados_fii" in st.session_state and st.session_state["dados_fii"]:
         # ── Sugestões dinâmicas geradas pela IA ─────────────────────
         st.markdown("**💡 Sugestões de perguntas:**")
 
-        # Gera sugestões apenas uma vez por ticker consultado
         if "sugestoes_ia" not in st.session_state or \
            st.session_state.get("sugestoes_ticker") != dados_fii["ticker"]:
             with st.spinner("💡 Gerando sugestões personalizadas..."):
