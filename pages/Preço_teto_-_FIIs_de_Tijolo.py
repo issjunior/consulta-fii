@@ -630,7 +630,75 @@ if buscar:
             except KeyError:
                 st.error(f"❌ Ticker '{ticker_raw}' não encontrado. Verifique se está correto.")
             except Exception as e:
-                st.error(f"❌ Erro inesperado: {e}")
+                error_str = str(e).lower()
+
+                # Classificação inteligente de erros
+                if "401" in error_str or "unauthorized" in error_str:
+                    st.error("""
+                    🔒 **Erro 401: Não Autorizado**
+                    - Provavelmente o site de dados está bloqueando requisições do Streamlit Cloud
+                    - **Solução:** Verifique se seus módulos de scraping incluem:
+                      • Headers realistas (User-Agent, Referer, etc.)
+                      • Rate limiting (tempo de espera entre requisições)
+                    - Sites comuns que bloqueiam: Fundamentus, StatusInvest, algumas RI de empresas
+                    """)
+
+                elif "403" in error_str or "forbidden" in error_str:
+                    st.error("""
+                    🚫 **Erro 403: Acesso Negado**
+                    - O site está bloqueando explicitamente seu IP (comum em serviços de dados financeiros)
+                    - **Solução:**
+                      • Use APIs oficiais quando disponíveis (ex: Banco Central para NTN-B)
+                      • Considere armazenar dados em cache ou usar fontes alternativas
+                      • Evite requisições muito frequentes (mantenha o sleep entre requests)
+                    """)
+
+                elif "429" in error_str or "too many requests" in error_str:
+                    st.error("""
+                    ⏳ **Erro 429: Muitas Requisições**
+                    - Você está fazendo requisições muito rapidamente para o site de dados
+                    - **Solução:**
+                      • Aumente o tempo de espera entre requisições (ex: de 1s para 3-5s)
+                      • Implemente cache local de dados que não mudam frequentemente
+                      • Considere usar webhooks ou atualização agendada em vez de requisição em tempo real
+                    """)
+
+                elif "timeout" in error_str or "timed out" in error_str:
+                    st.error("""
+                    ⏱️ **Erro de Timeout**
+                    - O site de dados demorou muito para responder (comum em servidores lentos ou bloqueados)
+                    - **Solução:**
+                      • Verifique sua conexão de internet (se testando localmente)
+                      • Na nuvem, alguns IPs podem ter rotas menos otimizadas para certos sites
+                      • Tente aumentar o timeout (ex: de 10s para 20-30s)
+                      • Considere usar uma fonte de dados mais rápida ou confiável
+                    """)
+
+                elif "connection error" in error_str or "failed to establish connection" in error_str:
+                    st.error("""
+                    🔌 **Erro de Conexão**
+                    - Não foi possível estabelecer conexão com o site de dados
+                    - **Causas prováveis:**
+                      • Site bloqueando IPs de data centers (Streamlit Cloud, AWS, etc.)
+                      • Problemas temporários no site de origem
+                      • Firewall ou restrições de rede
+                    - **Solução:**
+                      • Teste acessar o site diretamente do seu navegador
+                      • Se funcionar localmente mas não na nuvem, quase certamente é bloqueio de IP
+                      • Procure por APIs oficiais ou fontes de dados alternativas
+                    """)
+
+                else:
+                    # Erro genérico com contexto útil
+                    st.error(f"""
+                    ❌ **Erro inesperado durante a coleta de dados**
+                    **Detalhes técnicos:** {type(e).__name__}: {str(e)}
+                    **Possíveis causas:**
+                    • Mudança na estrutura do site de dados (quebrou o scraping)
+                    • Dados indisponíveis temporariamente para este ticker
+                    • Problema de formatação na resposta recebida
+                    **Sugestão:** Teste outro ticker (ex: PETR4.SA) para verificar se é específico deste FII
+                    """)
 
 # ================================================================
 # SEÇÃO DE CHAT COM IA
