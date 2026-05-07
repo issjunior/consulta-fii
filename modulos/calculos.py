@@ -4,7 +4,22 @@ def calcular_total_dividendos(media_dividendos):                            # me
     return media_dividendos * 12
 
 def calcular_preco_teto(total_dividendos, media_ntnb, spread, tx_crescimento_dy):
-    return (total_dividendos / ((media_ntnb + spread)/100) - tx_crescimento_dy)
+    """
+    Calcula o preço teto (valor justo) usando o Modelo de Gordon.
+    - total_dividendos: soma anual dos dividendos (R$)
+    - media_ntnb: taxa média NTN‑B (%)
+    - spread: prêmio de risco adicional (%), soma ao custo de capital
+    - tx_crescimento_dy: taxa de crescimento esperada dos dividendos (%)
+    """
+    # custo de capital (r) em decimal
+    custo_capital = (media_ntnb + spread) / 100.0
+    # taxa de crescimento (g) em decimal
+    taxa_crescimento = tx_crescimento_dy / 100.0
+    # protege contra divisão por zero ou custo < crescimento
+    if custo_capital <= taxa_crescimento:
+        return None
+    preco_teto = total_dividendos / (custo_capital - taxa_crescimento)
+    return preco_teto
 
 def calcular_media_dividendos_porcentagem(total_dividendos, preco_atual):
     return (total_dividendos / preco_atual) * 100
