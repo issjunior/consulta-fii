@@ -5,6 +5,9 @@ import statistics
 import streamlit as st
 import time
 
+# URL pública do Investidor10 para tesouro direto (usada em outros módulos)
+url_investidor10 = "https://investidor10.com.br/tesouro-direto/"
+
 # Enhanced headers to mimic a real browser and reduce blocking chances
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -88,7 +91,12 @@ def calcular_media_taxas(titulos_info):
 
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
 def exibir_resultados():
-    # Small delay to be respectful to the source
+    """Obtém a média da taxa NTN‑B e a lista de títulos.
+    Caso o scraping não retorne nenhum título (por bloqueio ou mudança de layout),
+    a função devolve ``0`` como média e exibe um aviso no Streamlit para que o usuário
+    saiba que não foi possível coletar os dados.
+    """
+    # Pequena pausa para respeitar o servidor
     time.sleep(1)
     titulos_info = scrape_tesouro_ipca()
 
@@ -96,5 +104,8 @@ def exibir_resultados():
         media_ntnb = calcular_media_taxas(titulos_info)
     else:
         media_ntnb = 0
+        st.warning("⚠️ Não foi possível extrair informações dos títulos NTN‑B. "
++                   "Verifique se o site <https://investidor10.com.br/tesouro-direto/> "
++                   "permite o acesso ou se o layout da página mudou.")
 
     return media_ntnb, titulos_info  # Retorna a média e a lista de títulos
