@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 from modulos.ipca import obter_ipca, processar_titulos
-from modulos.scraping_ntnb import url_investidor10
-from pages.Índices import exibir_resultados
+from modulos.scraping_ntnb import url_investidor10, exibir_resultados
 
 # ================================================================
 # CONFIGURAÇÃO DO LAYOUT
@@ -24,6 +23,20 @@ st.caption(
 
 st.divider()
 
+manual_ntnb_input = st.number_input(
+    "NTN-B manual (%):",
+    min_value=0.0,
+    value=0.0,
+    step=0.01,
+    format="%.2f",
+    help=(
+        "Opcional: insira a taxa NTN-B manualmente. "
+        "O valor será usado nos cálculos quando informado."
+    ),
+    key="manual_ntnb_input"
+)
+manual_ntnb = manual_ntnb_input if manual_ntnb_input > 0 else None
+
 # ================================================================
 # COLETA DE DADOS COM LOADING
 # ================================================================
@@ -31,11 +44,34 @@ loading_container = st.empty()
 loading_container.info("📡 Buscando títulos IPCA+ no Investidor10...")
 
 try:
-    media_ntnb_local, titulos_info = exibir_resultados()
+    media_ntnb_local, titulos_info = exibir_resultados(manual_ntnb)
 except Exception as e:
     loading_container.empty()
     st.error(f"❌ Erro ao buscar títulos NTN-B: {e}")
     st.stop()
+
+loading_container.empty()
+
+scraping_failed = not titulos_info
+manual_override = manual_ntnb is not None
+
+if scraping_failed and not manual_override:
+    st.info(
+        "Não foi possível obter automaticamente a taxa NTN-B via scraping do Investidor10. "
+        "Por favor, informe abaixo o valor manualmente com duas casas decimais. "
+        "Esse valor será usado nos cálculos e na tabela."
+    )
+elif manual_override:
+    st.info(
+        "A taxa NTN-B exibida está sendo usada a partir da entrada manual do usuário."
+    )
+else:
+    st.info(
+        "A taxa NTN-B exibida está sendo obtida automaticamente via scraping do Investidor10."
+    )
+
+if manual_override:
+    media_ntnb_local = manual_ntnb
 
 try:
     ipca_filtrado_formatado, ipca_5anos, data_inicio_5anos, data_corte = obter_ipca()
@@ -61,15 +97,20 @@ except Exception:
 # ================================================================
 # CARDS DE DESTAQUE
 # ================================================================
-if titulos_info:
+if titulos_info or manual_ntnb is not None:
     col1, col2 = st.columns(2)
 
     with col1:
         with st.container(border=True):
             st.subheader("📈 Média NTN-B")
             if media_ntnb_local is not None:
+                metric_label = (
+                    "Média dos títulos encontrados"
+                    if manual_ntnb is None
+                    else "Taxa NTN-B manual utilizada"
+                )
                 st.metric(
-                    label="Média dos títulos encontrados",
+                    label=metric_label,
                     value=f"{media_ntnb_local:.2f} %",
                 )
             else:
@@ -91,7 +132,7 @@ if titulos_info:
     st.subheader("📋 Títulos Encontrados")
 
     try:
-        df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado)
+        df_titulos = processar_titulos(titulos_info, ultimo_ipca_formatado, manual_ntnb=manual_ntnb)
 
         # Destaca o maior valor da coluna 'Soma'
         def highlight_max(data, color="#1f4e79"):
@@ -106,10 +147,13 @@ if titulos_info:
     except Exception as e:
         st.error(f"❌ Erro ao processar os títulos: {e}")
 
-    st.caption(
-        f"Fonte: <a href='{url_investidor10}' target='_blank'>Investidor10</a>.",
-        unsafe_allow_html=True
-    )
+    if manual_override:
+        st.caption("Fonte: Valor manual informado pelo usuário.")
+    else:
+        st.caption(
+            f"Fonte: <a href='{url_investidor10}' target='_blank'>Investidor10</a> (scraping).",
+            unsafe_allow_html=True
+        )
 
-else:
+elif not scraping_failed:
     st.warning("⚠️ Nenhum título IPCA+ encontrado ou ocorreu um erro ao buscar os dados.")

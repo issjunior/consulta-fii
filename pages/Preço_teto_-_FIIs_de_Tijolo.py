@@ -271,6 +271,20 @@ with col_crescimento:
         )
     )
 
+manual_ntnb_input = st.number_input(
+    "NTN-B manual (%):",
+    min_value=0.0,
+    value=0.0,
+    step=0.01,
+    format="%.2f",
+    help=(
+        "Opcional: insira manualmente a taxa NTN-B usada nos cálculos. "
+        "Deixe em 0 para usar o valor obtido automaticamente via scraping."
+    ),
+    key="manual_ntnb_input"
+)
+manual_ntnb = manual_ntnb_input if manual_ntnb_input > 0 else None
+
 # ================================================================
 # PROCESSAMENTO DA BUSCA
 # ================================================================
@@ -282,7 +296,13 @@ if buscar:
     else:
         with st.spinner(f"Buscando dados de {ticker_raw}..."):
             try:
-                media_ntnb_local, titulos_info = exibir_resultados()
+                media_ntnb_local, titulos_info = exibir_resultados(manual_ntnb)
+                if manual_ntnb is None and not titulos_info:
+                    st.warning(
+                        "Não foi possível obter a taxa NTN-B automaticamente. "
+                        "Por favor, informe manualmente o valor no campo acima e clique em Buscar novamente."
+                    )
+                    st.stop()
                 media_dividendos               = obter_media_dividendos(ticker)
 
                 if media_dividendos is None:
@@ -332,7 +352,34 @@ if buscar:
                     st.session_state["sugestoes_ia"]     = []
                     st.session_state["sugestoes_ticker"] = None
 
+                    source_label = (
+                        "NTN-B manual informado pelo usuário"
+                        if manual_ntnb is not None
+                        else "NTN-B obtida automaticamente via scraping do Investidor10"
+                    )
+
+                    st.session_state["dados_fii"] = {
+                        "ticker":                  ticker_raw,
+                        "nome":                    nome_fii,
+                        "preco_atual":             real(preco_atual) if preco_atual else "N/A",
+                        "preco_teto":              real(preco_teto) if preco_teto else "N/A",
+                        "diferenca_pct":           f"{diferenca_pct:+.2f}%" if diferenca_pct is not None else "N/A",
+                        "diferenca_abs":           f"R$ {diferenca_abs:+.2f}" if diferenca_abs is not None else "N/A",
+                        "media_dividendos":        real(media_dividendos) if media_dividendos else "N/A",
+                        "media_div_pct":           porcentagem(media_div_pct) if media_div_pct else "N/A",
+                        "total_dividendos":        real(total_dividendos) if total_dividendos else "N/A",
+                        "cotas_necessarias":       cotas_necessarias,
+                        "valor_cotas_magicnumber": real(valor_cotas_magicnumber) if valor_cotas_magicnumber else "N/A",
+                        "valor_cap_rate":          porcentagem(valor_cap_rate) if valor_cap_rate else "N/A",
+                        "valor_pvp":               porcentagem(valor_pvp) if valor_pvp else "N/A",
+                        "spread":                  porcentagem(spread),
+                        "vacancia":                porcentagem(vacancia),
+                        "tx_crescimento_dy":       porcentagem(tx_crescimento_dy),
+                        "ntnb_source":             source_label,
+                    }
+
                     st.success("✅ Dados carregados com sucesso")
+                    st.caption(f"Fonte da NTN-B: {source_label}")
                     st.divider()
 
                     # ── Identificação ────────────────────────────────────

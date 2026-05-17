@@ -48,12 +48,12 @@ def scrape_tesouro_ipca():
 
         for elemento in elementos:
             texto = elemento.get_text(strip=True)
-            if 'IPCA+' in texto:
-                titulo_match = re.search(r'(Tesouro IPCA\+ \d{4})', texto)
-                porcentagem_match = re.search(r'IPCA \+ (\d+,\d+)%', texto)
+            if 'Tesouro IPCA+' in texto:
+                titulo_match = re.search(r'(Tesouro IPCA\+[^\d%\n]*)', texto)
+                porcentagem_match = re.search(r'IPCA \+\s*(\d+,\d+)%', texto)
 
                 if titulo_match and porcentagem_match:
-                    titulo = titulo_match.group(1)
+                    titulo = titulo_match.group(1).strip()
                     porcentagem = porcentagem_match.group(1)
                     titulos_info.append((titulo, porcentagem))
 
@@ -79,6 +79,20 @@ def scrape_tesouro_ipca():
         st.error(f"💥 Erro inesperado durante o scraping de tesouro: {e}")
         return []
 
+
+@st.cache_data(ttl=10800)
+def scrape_tesouro_ipca_2040():
+    """Retorna a taxa do Tesouro IPCA+ 2040 ou None se não for encontrado."""
+    titulos_info = scrape_tesouro_ipca()
+    for titulo, porcentagem in titulos_info:
+        if titulo == "Tesouro IPCA+ 2040":
+            try:
+                return float(porcentagem.replace(',', '.'))
+            except ValueError:
+                return None
+    return None
+
+
 def calcular_media_taxas(titulos_info):
     if not titulos_info:
         return 0
@@ -90,22 +104,25 @@ def calcular_media_taxas(titulos_info):
     return statistics.mean(taxas) if taxas else 0
 
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
-def exibir_resultados():
+def exibir_resultados(manual_ntnb=None):
     """Obtém a média da taxa NTN‑B e a lista de títulos.
     Caso o scraping não retorne nenhum título (por bloqueio ou mudança de layout),
     a função devolve ``0`` como média e exibe um aviso no Streamlit para que o usuário
     saiba que não foi possível coletar os dados.
+
+    Se o usuário informar um valor manual em ``manual_ntnb``, esse valor será usado
+    como média em vez da média calculada automaticamente.
     """
     # Pequena pausa para respeitar o servidor
     time.sleep(1)
     titulos_info = scrape_tesouro_ipca()
 
-    if titulos_info:
-        media_ntnb = calcular_media_taxas(titulos_info)
+    if manual_ntnb is not None:
+        media_ntnb = manual_ntnb
     else:
-        media_ntnb = 0
-        st.warning("⚠️ Não foi possível extrair informações dos títulos NTN‑B. "
-+                   "Verifique se o site <https://investidor10.com.br/tesouro-direto/> "
-+                   "permite o acesso ou se o layout da página mudou.")
+        if titulos_info:
+            media_ntnb = calcular_media_taxas(titulos_info)
+        else:
+            media_ntnb = 0
 
     return media_ntnb, titulos_info  # Retorna a média e a lista de títulos

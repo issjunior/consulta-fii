@@ -72,12 +72,23 @@ def criar_grafico_ipca(ipca_5anos, data_inicio_5anos, data_corte):
 
 # Função para processar os títulos e adicionar a soma
 @st.cache_data(ttl=10800)  # TTL em segundos (10800 segundos = 3 horas)
-def processar_titulos(titulos_info, ultimo_ipca_formatado):
+def processar_titulos(titulos_info, ultimo_ipca_formatado, manual_ntnb=None):
     # Converte os resultados para um DataFrame
-    df_titulos = pd.DataFrame(titulos_info, columns=['Título', 'Porcentagem'])
+    df_titulos = pd.DataFrame(titulos_info, columns=['Título', 'Porcentagem']) if titulos_info else pd.DataFrame(columns=['Título', 'Porcentagem'])
+
+    if manual_ntnb is not None:
+        df_titulos.loc[len(df_titulos)] = ['NTN-B manual informada', manual_ntnb]
+
+    if df_titulos.empty:
+        return df_titulos
 
     # Substitui a vírgula por ponto e converte a coluna 'Porcentagem' para float
-    df_titulos['Porcentagem'] = df_titulos['Porcentagem'].str.replace(',', '.').astype(float)
+    df_titulos['Porcentagem'] = (
+        df_titulos['Porcentagem']
+            .astype(str)
+            .str.replace(',', '.', regex=False)
+            .astype(float)
+    )
 
     # Calcula a média da coluna 'Porcentagem'
     media_porcentagem = df_titulos['Porcentagem'].mean()
@@ -89,13 +100,16 @@ def processar_titulos(titulos_info, ultimo_ipca_formatado):
     df_titulos['Porcentagem'] = df_titulos['Porcentagem'].map(lambda x: f"{x:.2f} %")
 
     # Converte o valor do último IPCA para um número, removendo o '%'
-    ultimo_ipca_num = float(ultimo_ipca_formatado.replace(' %', ''))
+    try:
+        ultimo_ipca_num = float(str(ultimo_ipca_formatado).replace(' %', '').replace(',', '.'))
+    except Exception:
+        ultimo_ipca_num = 0.0
 
     # Cria a nova coluna 'Último IPCA' com o valor formatado
     df_titulos['Último IPCA'] = ultimo_ipca_formatado
 
     # Soma da coluna 'Porcentagem' (convertida para número) e 'Último IPCA' (convertido para número)
-    df_titulos['Soma'] = df_titulos['Porcentagem'].str.replace(' %', '').astype(float) + ultimo_ipca_num
+    df_titulos['Soma'] = df_titulos['Porcentagem'].str.replace(' %', '', regex=False).astype(float) + ultimo_ipca_num
 
     # Formata a nova coluna 'Soma' para exibir como porcentagem
     df_titulos['Soma'] = df_titulos['Soma'].map(lambda x: f"{x:.2f} %")
